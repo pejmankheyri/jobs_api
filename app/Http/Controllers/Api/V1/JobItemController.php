@@ -47,14 +47,6 @@ class JobItemController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(JobItem $jobItem)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateRequest $request, $id)
@@ -78,9 +70,7 @@ class JobItemController extends Controller
     public function destroy($id)
     {
         $jobItem = JobItem::findOrFail($id);
-
         $jobItem->delete();
-
-        return response()->json(['message' => 'Job removed successfully!'], 200);
+        return response()->json(['message' => 'Job ' . $jobItem->title . ' with id ' . $id . ' removed successfully!'], 200);
     }
 }

@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasMany(JobItem::class);
     }
 
+    public function company()
+    {
+        return $this->hasMany(Company::class);
+    }
+
     public function scopeOrderByIdDesc(Builder $query)
     {
         return $query->orderBy('id', 'desc')->paginate(10);
