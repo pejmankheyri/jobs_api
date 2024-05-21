@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobItem\StoreRequest;
+use App\Http\Requests\JobItem\UpdateRequest;
 use App\Http\Resources\JobItemResource;
 use App\Models\JobItem;
 use Illuminate\Http\Request;
@@ -56,13 +57,12 @@ class JobItemController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         $jobItem = JobItem::findOrFail($id);
 
         $validated = $request->validated();
 
-        $jobItem = new JobItem();
         $jobItem->title = $validated['title'];
         $jobItem->description = $validated['description'];
         $jobItem->user_id = 1;

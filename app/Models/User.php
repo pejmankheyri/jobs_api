@@ -3,13 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -48,5 +51,19 @@ class User extends Authenticatable
     public function jobItem()
     {
         return $this->hasMany(JobItem::class);
+    }
+
+    public function scopeOrderByIdDesc(Builder $query)
+    {
+        return $query->orderBy('id', 'desc')->paginate(10);
+    }
+
+    protected static function booted(): void
+    {
+        parent::boot();
+
+        static::deleting(function (User $user) {
+            $user->jobItem()->delete();
+        });
     }
 }

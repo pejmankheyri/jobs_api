@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,9 +27,9 @@ class JobItemResource extends JsonResource
                 'updated_at_human' => $this->updated_at->diffForHumans(),
                 'updated_at' => $this->updated_at
             ],
-            'user' => new UserResource($this->whenLoaded('user')),
-            // 'userw' => new UserResource(User::find($this->user_id)),
-            'posts' => UserResource::collection($this->whenLoaded('users')),
+            // 'user' => new UserResource($this->whenLoaded('user')),
+            'user' => new UserResource(User::find($this->user_id)),
+            // 'posts' => UserResource::collection($this->whenLoaded('users')),
         ];
     }
 }
