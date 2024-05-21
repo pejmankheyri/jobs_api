@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\JobItemResourse;
+use App\Http\Requests\JobItem\StoreRequest;
+use App\Http\Resources\JobItemResource;
 use App\Models\JobItem;
 use Illuminate\Http\Request;
 
@@ -15,28 +16,33 @@ class JobItemController extends Controller
     public function index()
     {
         $jobs = JobItem::orderBy('id', 'desc')->paginate(10);
-        return JobItemResourse::collection($jobs);
+        return JobItemResource::collection($jobs);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $job = JobItem::create([
-            'title' => $request->input('title'),
-            'description' => $request->input('description')
-        ]);
+        $validated = $request->validated();
 
-        return new JobItemResourse($job);
+        $jobItem = new JobItem();
+        $jobItem->title = $validated['title'];
+        $jobItem->description = $validated['description'];
+        $jobItem->user_id = 1;
+
+        $jobItem->save();
+
+        return new JobItemResource($jobItem);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(JobItem $jobItem)
+    public function show($id)
     {
-        return new JobItemResourse($jobItem);
+        $jobItem = JobItem::findOrFail($id);
+        return new JobItemResource($jobItem);
     }
 
     /**
@@ -54,12 +60,16 @@ class JobItemController extends Controller
     {
         $jobItem = JobItem::findOrFail($id);
 
-        $jobItem->update([
-            'title' => $request->input('title'),
-            'description' => $request->input('description')
-        ]);
+        $validated = $request->validated();
 
-        return new JobItemResourse($jobItem);
+        $jobItem = new JobItem();
+        $jobItem->title = $validated['title'];
+        $jobItem->description = $validated['description'];
+        $jobItem->user_id = 1;
+
+        $jobItem->save();
+
+        return new JobItemResource($jobItem);
     }
 
     /**
