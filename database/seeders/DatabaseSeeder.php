@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,6 +21,8 @@ class DatabaseSeeder extends Seeder
             UserTableSeeder::class,
             JobItemTableSeeder::class,
             CompanyTableSeeder::class,
+            TagsTableSeeder::class,
+            JobItemTagTableSeeder::class,
         ]);
     }
 }

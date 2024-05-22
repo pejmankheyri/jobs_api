@@ -16,7 +16,7 @@ class JobItemController extends Controller
      */
     public function index()
     {
-        $jobs = JobItem::orderBy('id', 'desc')->paginate(10);
+        $jobs = JobItem::with('tags')->with('user')->orderByIdDesc();
         return JobItemResource::collection($jobs);
     }
 
