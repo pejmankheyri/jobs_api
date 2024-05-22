@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\Taggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class JobItem extends Model
 {
-    use HasFactory;
+    use HasFactory, Taggable;
 
     protected $fillable = [
         'title',
@@ -27,7 +28,7 @@ class JobItem extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class)->withTimestamps();
+        return $this->morphToMany(Tag::class, 'taggable')->withTimestamps();
     }
 
     public function scopeOrderByIdDesc(Builder $query)

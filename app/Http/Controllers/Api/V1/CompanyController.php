@@ -16,7 +16,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $comapanies = Company::orderByIdDesc();
+        $comapanies = Company::with('tags')->with('user')->orderByIdDesc();
         return CompanyResource::collection($comapanies);
     }
 

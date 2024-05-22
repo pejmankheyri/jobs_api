@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             CompanyTableSeeder::class,
             TagsTableSeeder::class,
             JobItemTagTableSeeder::class,
+            CompanyTagTableSeeder::class,
         ]);
     }
 }

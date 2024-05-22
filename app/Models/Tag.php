@@ -15,6 +15,11 @@ class Tag extends Model
 
     public function jobItem()
     {
-        return $this->belongsToMany(JobItem::class)->withTimestamps();
+        return $this->morphedByMany(JobItem::class, 'taggable')->withTimestamps();
+    }
+
+    public function company()
+    {
+        return $this->morphedByMany(Company::class, 'taggable')->withTimestamps();
     }
 }

@@ -26,6 +26,5 @@ class JobItemTagTableSeeder extends Seeder
             $tagIds = Tag::inRandomOrder()->limit(rand($howManyMin, $howManyMax))->pluck('id');
             $jobItem->tags()->sync($tagIds);
         });
-
     }
 }
