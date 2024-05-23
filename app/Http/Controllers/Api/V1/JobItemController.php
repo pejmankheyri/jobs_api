@@ -7,7 +7,7 @@ use App\Http\Requests\JobItem\StoreRequest;
 use App\Http\Requests\JobItem\UpdateRequest;
 use App\Http\Resources\JobItemResource;
 use App\Models\JobItem;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JobItemController extends Controller
 {
@@ -30,7 +30,7 @@ class JobItemController extends Controller
         $jobItem = new JobItem();
         $jobItem->title = $validated['title'];
         $jobItem->description = $validated['description'];
-        $jobItem->user_id = 1;
+        $jobItem->user_id = Auth::id();
 
         $jobItem->save();
 
@@ -57,7 +57,7 @@ class JobItemController extends Controller
 
         $jobItem->title = $validated['title'];
         $jobItem->description = $validated['description'];
-        $jobItem->user_id = 1;
+        $jobItem->user_id = Auth::id();
 
         $jobItem->save();
 

@@ -8,6 +8,7 @@ use App\Http\Requests\Company\UpdateRequest;
 use App\Http\Resources\CompanyResource;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
@@ -19,7 +20,6 @@ class CompanyController extends Controller
         $comapanies = Company::with('tags')->with('user')->orderByIdDesc();
         return CompanyResource::collection($comapanies);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -34,22 +34,21 @@ class CompanyController extends Controller
         $company->rating = $validated['rating'];
         $company->website = $validated['website'];
         $company->employes = $validated['employes'];
-        $company->user_id = 1;
+        $company->user_id = Auth::id();
 
         $company->save();
 
         return new CompanyResource($company);
-
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Company $company)
+    public function show($id)
     {
+        $company = Company::findOrFail($id);
         return new CompanyResource($company);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -65,7 +64,7 @@ class CompanyController extends Controller
         $company->rating = $validated['rating'];
         $company->website = $validated['website'];
         $company->employes = $validated['employes'];
-        $company->user_id = 1;
+        $company->user_id = Auth::id();
 
         $company->save();
 
