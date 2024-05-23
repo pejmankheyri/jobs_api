@@ -9,6 +9,7 @@ use App\Http\Resources\CompanyResource;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CompanyController extends Controller
 {
@@ -57,6 +58,8 @@ class CompanyController extends Controller
     {
         $company = Company::findOrFail($id);
 
+        Gate::authorize('update', $company);
+
         $validated = $request->validated();
 
         $company->title = $validated['title'];
@@ -77,6 +80,7 @@ class CompanyController extends Controller
     public function destroy($id)
     {
         $company = Company::findOrFail($id);
+        Gate::authorize('delete', $company);
         $company->delete();
         return response()->json(['message' => 'Company ' . $company->title . ' with id ' . $id . ' removed successfully!'], 200);
     }

@@ -8,6 +8,7 @@ use App\Http\Requests\JobItem\UpdateRequest;
 use App\Http\Resources\JobItemResource;
 use App\Models\JobItem;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class JobItemController extends Controller
 {
@@ -53,6 +54,8 @@ class JobItemController extends Controller
     {
         $jobItem = JobItem::findOrFail($id);
 
+        Gate::authorize('update', $jobItem);
+
         $validated = $request->validated();
 
         $jobItem->title = $validated['title'];
@@ -70,6 +73,7 @@ class JobItemController extends Controller
     public function destroy($id)
     {
         $jobItem = JobItem::findOrFail($id);
+        Gate::authorize('delete', $jobItem);
         $jobItem->delete();
         return response()->json(['message' => 'Job ' . $jobItem->title . ' with id ' . $id . ' removed successfully!'], 200);
     }

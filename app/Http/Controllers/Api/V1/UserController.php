@@ -8,6 +8,7 @@ use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -53,6 +54,8 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
+        Gate::authorize('update', $user);
+
         $validated = $request->validated();
 
         $user->name = $validated['name'];
@@ -70,9 +73,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-
+        Gate::authorize('delete', $user);
         $user->delete();
-
         return response()->json(['message' => 'User ' . $user->email . ' with id ' . $id . ' removed successfully!'], 200);
     }
 }
