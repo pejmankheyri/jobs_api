@@ -35,4 +35,13 @@ class JobItem extends Model
     {
         return $query->orderBy('id', 'desc')->paginate(10);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($jobItem) {
+            $jobItem->tags()->detach();
+        });
+    }
 }

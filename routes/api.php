@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CompanyController;
+use App\Http\Controllers\Api\V1\CompanyImagesController;
 use App\Http\Controllers\Api\V1\CompanyTagController;
 use App\Http\Controllers\Api\V1\JobItemController;
 use App\Http\Controllers\Api\V1\JobTagController;
@@ -32,6 +33,9 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::post('/', [CompanyController::class, 'store'])->name('store')->middleware('auth:sanctum');
         Route::put('/{id}', [CompanyController::class, 'update'])->name('update')->middleware('auth:sanctum');
         Route::delete('/{id}', [CompanyController::class, 'destroy'])->name('destroy')->middleware('auth:sanctum');
+        Route::post('/{id}/images', [CompanyImagesController::class, 'store'])->name('images.store')->middleware('auth:sanctum');
+        Route::delete('/image/{id}', [CompanyImagesController::class, 'destroy'])->name('images.destroy')->middleware('auth:sanctum');
+
     });
 
     Route::get('/jobs/tags/{tagId}', [JobTagController::class, 'index']);

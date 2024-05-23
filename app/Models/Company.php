@@ -6,6 +6,7 @@ use App\Traits\Taggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File;
 
 class Company extends Model
 {
@@ -41,10 +42,37 @@ class Company extends Model
     }
 
     /**
+     * Get the images for the company.
+     */
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+
+    /**
      * Scope a query to order by id in descending order.
      */
     public function scopeOrderByIdDesc(Builder $query)
     {
         return $query->orderBy('id', 'desc')->paginate(10);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($company) {
+            $company->images->each->delete();
+            $company->location->each->delete();
+            $company->jobItem->each->delete();
+
+            $company->tags()->detach();
+
+
+            $directory = public_path('images/companies/' . $company->id);
+            if (File::exists($directory)) {
+                File::deleteDirectory($directory);
+            }
+        });
     }
 }
