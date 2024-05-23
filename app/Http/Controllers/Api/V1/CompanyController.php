@@ -18,7 +18,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $comapanies = Company::with('tags')->with('user')->orderByIdDesc();
+        $comapanies = Company::with(['location','tags','user','jobItem'])->orderByIdDesc();
         return CompanyResource::collection($comapanies);
     }
 
@@ -47,7 +47,7 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        $company = Company::findOrFail($id);
+        $company = Company::with(['location','tags','user','jobItem'])->findOrFail($id);
         return new CompanyResource($company);
     }
 

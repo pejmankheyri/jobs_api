@@ -17,7 +17,7 @@ class JobItemController extends Controller
      */
     public function index()
     {
-        $jobs = JobItem::with('tags')->with('user')->orderByIdDesc();
+        $jobs = JobItem::with(['tags', 'user', 'company'])->orderByIdDesc();
         return JobItemResource::collection($jobs);
     }
 
@@ -43,7 +43,7 @@ class JobItemController extends Controller
      */
     public function show($id)
     {
-        $jobItem = JobItem::findOrFail($id);
+        $jobItem = JobItem::with(['tags', 'user', 'company'])->findOrFail($id);
         return new JobItemResource($jobItem);
     }
 

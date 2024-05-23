@@ -29,6 +29,7 @@ class JobItemResource extends JsonResource
             ],
             'user' => new UserResource($this->whenLoaded('user')),
             'tags' => TagResource::collection($this->whenLoaded('tags')),
+            'company' => new CompanyResource($this->whenLoaded('company')),
         ];
     }
 }

@@ -16,16 +16,33 @@ class Company extends Model
         'description',
     ];
 
+    /**
+     * Get the user that owns the company.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Get the job items for the company.
+     */
     public function jobItem()
     {
         return $this->hasMany(JobItem::class);
     }
 
+    /**
+     * Get the locations for the company.
+     */
+    public function location()
+    {
+        return $this->hasMany(Location::class);
+    }
+
+    /**
+     * Scope a query to order by id in descending order.
+     */
     public function scopeOrderByIdDesc(Builder $query)
     {
         return $query->orderBy('id', 'desc')->paginate(10);
