@@ -17,11 +17,11 @@ class CompanyTagTableSeeder extends Seeder
         $tagCount = Tag::all()->count();
 
         if ($tagCount === 0) {
-            $this->command->info('No tags found, skipping assigning tags to companies');
+            $this->command->info(__('message.no_tags_found'));
         }
 
-        $howManyMin = (int) $this->command->ask('Minimum tags on company?', 0);
-        $howManyMax = min((int) $this->command->ask('Maximum tags on company?', $tagCount), $tagCount);
+        $howManyMin = (int) $this->command->ask(__('message.minimum_tags_on_company'), 0);
+        $howManyMax = min((int) $this->command->ask(__('message.maximum_tags_on_company'), $tagCount), $tagCount);
 
         Company::all()->each(function ($campany) use ($howManyMin, $howManyMax) {
             $tagIds = Tag::inRandomOrder()->limit(rand($howManyMin, $howManyMax))->pluck('id');

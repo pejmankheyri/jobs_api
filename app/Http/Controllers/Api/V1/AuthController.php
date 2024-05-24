@@ -22,14 +22,13 @@ class AuthController extends Controller
 
         if(!$user) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'email' => [__('auth.failed')],
             ]);
         }
 
         if (!Hash::check($request->password, $user->password)) {
-            dd('password matched');
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'email' => [__('auth.failed')],
             ]);
         }
 
@@ -42,6 +41,6 @@ class AuthController extends Controller
     {
         $request->user()->tokens()->delete();
 
-        return response()->json(['message' => 'Logged out successfully!'], 200);
+        return response()->json(['message' => __('auth.logged_out')], 200);
     }
 }

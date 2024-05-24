@@ -21,17 +21,17 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->renderable(function (Exception $exception) {
             if ($exception instanceof NotFoundHttpException) {
                 return response()->json([
-                    'message' => 'Resource not found',
+                    'message' => __('message.resource_not_found'),
                 ], 404);
             }
             if ($exception instanceof AccessDeniedHttpException) {
                 return response()->json([
-                    'message' => 'Access denied',
+                    'message' => __('message.access_denied'),
                 ], 404);
             }
             if ($exception instanceof RouteNotFoundException) {
                 return response()->json([
-                    'message' => 'Route not found'
+                    'message' => __('message.route_not_found'),
                 ], 500);
             }
 

@@ -7,8 +7,6 @@ use App\Http\Controllers\Api\V1\CompanyTagController;
 use App\Http\Controllers\Api\V1\JobItemController;
 use App\Http\Controllers\Api\V1\JobTagController;
 use App\Http\Controllers\Api\V1\UserController;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('api.v1.')->group(function () {

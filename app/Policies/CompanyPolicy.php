@@ -39,7 +39,7 @@ class CompanyPolicy
     {
         return $user->id === $company->user_id
             ? Response::allow()
-            : Response::deny('You do not own this job item.');
+            : Response::deny(__('message.you_not_own_this_company'));
     }
 
     /**
@@ -49,7 +49,7 @@ class CompanyPolicy
     {
         return $user->id === $company->user_id
             ? Response::allow()
-            : Response::deny('You do not own this job item.');
+            : Response::deny(__('message.you_not_own_this_company'));
     }
 
     /**

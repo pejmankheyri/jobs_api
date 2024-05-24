@@ -82,6 +82,11 @@ class CompanyController extends Controller
         $company = Company::findOrFail($id);
         Gate::authorize('delete', $company);
         $company->delete();
-        return response()->json(['message' => 'Company ' . $company->title . ' with id ' . $id . ' removed successfully!'], 200);
+        return response()->json([
+            'message' => __('message.company_removed', [
+                'title' => $company->title,
+                'id' => $company->id
+            ])
+        ]);
     }
 }

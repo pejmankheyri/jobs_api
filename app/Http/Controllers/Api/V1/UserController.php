@@ -75,6 +75,11 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         Gate::authorize('delete', $user);
         $user->delete();
-        return response()->json(['message' => 'User ' . $user->email . ' with id ' . $id . ' removed successfully!'], 200);
+        return response()->json([
+            'message' => __('message.user_deleted', [
+                'email' => $user->email,
+                'id' => $user->id
+            ])
+        ]);
     }
 }

@@ -83,7 +83,12 @@ class JobItemController extends Controller
         $jobItem = JobItem::findOrFail($id);
         Gate::authorize('delete', $jobItem);
         $jobItem->delete();
-        return response()->json(['message' => 'Job ' . $jobItem->title . ' with id ' . $id . ' removed successfully!'], 200);
+        return response()->json([
+            'message' => __('message.job_removed', [
+                'title' => $jobItem->title,
+                'id' => $jobItem->id
+            ])
+        ]);
     }
 
     /**

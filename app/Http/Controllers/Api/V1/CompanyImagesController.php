@@ -33,9 +33,9 @@ class CompanyImagesController extends Controller
                     ])
                 );
             }
-            $responseMessage = 'upload success';
+            $responseMessage = __('message.company_images_uploaded_successfully');
         } else {
-            $responseMessage = 'No file for upload';
+            $responseMessage = __('message.no_file_for_upload');
         }
         return response()->json(['message' => $responseMessage]);
     }

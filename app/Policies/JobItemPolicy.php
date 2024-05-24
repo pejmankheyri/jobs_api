@@ -37,11 +37,9 @@ class JobItemPolicy
      */
     public function update(User $user, JobItem $jobItem): Response
     {
-        // dd($jobItem->company->user_id);
-        // dd($user->id);
         return $user->id === $jobItem->company->user_id
             ? Response::allow()
-            : Response::deny('You do not own this job item.');
+            : Response::deny(__('message.you_not_own_this_job_item'));
     }
 
 
@@ -52,7 +50,7 @@ class JobItemPolicy
     {
         return $user->id === $jobItem->company->user_id
             ? Response::allow()
-            : Response::deny('You do not own this job item.');
+            : Response::deny(__('message.you_not_own_this_job_item'));
     }
 
     /**

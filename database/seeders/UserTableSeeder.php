@@ -13,7 +13,7 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $usersCount = max((int)$this->command->ask('How many users would you like?', 20), 1);
+        $usersCount = max((int)$this->command->ask(__('message.how_many_users'), 10), 1);
 
         User::factory()->state([
             'name' => 'Pejman',

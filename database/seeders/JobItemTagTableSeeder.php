@@ -16,11 +16,11 @@ class JobItemTagTableSeeder extends Seeder
         $tagCount = Tag::all()->count();
 
         if ($tagCount === 0) {
-            $this->command->info('No tags found, skipping assigning tags to job items');
+            $this->command->info(__('message.no_tags_found'));
         }
 
-        $howManyMin = (int) $this->command->ask('Minimum tags on job item?', 0);
-        $howManyMax = min((int) $this->command->ask('Maximum tags on job item?', $tagCount), $tagCount);
+        $howManyMin = (int) $this->command->ask(__('message.minimum_tags_on_job_item'), 0);
+        $howManyMax = min((int) $this->command->ask(__('message.maximum_tags_on_job_item'), $tagCount), $tagCount);
 
         \App\Models\JobItem::all()->each(function ($jobItem) use ($howManyMin, $howManyMax) {
             $tagIds = Tag::inRandomOrder()->limit(rand($howManyMin, $howManyMax))->pluck('id');
