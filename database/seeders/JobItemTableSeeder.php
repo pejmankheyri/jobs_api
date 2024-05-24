@@ -16,11 +16,9 @@ class JobItemTableSeeder extends Seeder
     public function run(): void
     {
         $jobCount = (int)$this->command->ask('How many jobs would you like?', 50);
-        $users = User::all();
         $company = Company::all();
 
-        JobItem::factory($jobCount)->make()->each(function($jobItem) use ($users, $company){
-            $jobItem->user_id = $users->random()->id;
+        JobItem::factory($jobCount)->make()->each(function($jobItem) use ($company){
             $jobItem->company_id = $company->random()->id;
             $jobItem->save();
         });

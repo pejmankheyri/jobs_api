@@ -7,6 +7,7 @@ use App\Http\Requests\JobItem\StoreRequest;
 use App\Http\Requests\JobItem\UpdateRequest;
 use App\Http\Resources\JobItemResource;
 use App\Models\JobItem;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -17,7 +18,7 @@ class JobItemController extends Controller
      */
     public function index()
     {
-        $jobs = JobItem::with(['tags', 'user', 'company'])->orderByIdDesc();
+        $jobs = JobItem::with(['tags', 'company'])->orderByIdDesc();
         return JobItemResource::collection($jobs);
     }
 
@@ -31,11 +32,14 @@ class JobItemController extends Controller
         $jobItem = new JobItem();
         $jobItem->title = $validated['title'];
         $jobItem->description = $validated['description'];
-        $jobItem->user_id = Auth::id();
-
+        $jobItem->company_id = $validated['company_id'];
         $jobItem->save();
 
-        return new JobItemResource($jobItem);
+        $tagNames = $validated['tags'];
+        $tags = $this->getTags($tagNames);
+        $jobItem->tags()->sync($tags);
+
+        return new JobItemResource($jobItem->load(['tags', 'company']));
     }
 
     /**
@@ -43,7 +47,7 @@ class JobItemController extends Controller
      */
     public function show($id)
     {
-        $jobItem = JobItem::with(['tags', 'user', 'company'])->findOrFail($id);
+        $jobItem = JobItem::with(['tags', 'company'])->findOrFail($id);
         return new JobItemResource($jobItem);
     }
 
@@ -53,16 +57,20 @@ class JobItemController extends Controller
     public function update(UpdateRequest $request, $id)
     {
         $jobItem = JobItem::findOrFail($id);
-
         Gate::authorize('update', $jobItem);
 
         $validated = $request->validated();
 
         $jobItem->title = $validated['title'];
         $jobItem->description = $validated['description'];
-        $jobItem->user_id = Auth::id();
+        $jobItem->company_id = $id;
 
         $jobItem->save();
+
+        $tagNames = $validated['tags'];
+        $jobItem->tags()->detach();
+        $tags = $this->getTags($tagNames);
+        $jobItem->tags()->sync($tags);
 
         return new JobItemResource($jobItem);
     }
@@ -76,5 +84,18 @@ class JobItemController extends Controller
         Gate::authorize('delete', $jobItem);
         $jobItem->delete();
         return response()->json(['message' => 'Job ' . $jobItem->title . ' with id ' . $id . ' removed successfully!'], 200);
+    }
+
+    /**
+     * Get tags from tag names.
+     */
+    private function getTags($tagNames)
+    {
+        $tags = [];
+        foreach ($tagNames as $tagName) {
+            $tag = Tag::firstOrCreate(['name' => $tagName]);
+            $tags[] = $tag->id;
+        }
+        return $tags;
     }
 }

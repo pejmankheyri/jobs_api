@@ -12,6 +12,6 @@ class CompanyTagController extends Controller
     public function index($tagId)
     {
         $tag = Tag::findOrFail($tagId);
-        return CompanyResource::collection($tag->company);
+        return CompanyResource::collection($tag->company->load(['location','tags','user','jobItem']));
     }
 }

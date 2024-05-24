@@ -49,11 +49,6 @@ class User extends Authenticatable
         ];
     }
 
-    public function jobItem()
-    {
-        return $this->hasMany(JobItem::class);
-    }
-
     public function company()
     {
         return $this->hasMany(Company::class);
@@ -69,7 +64,7 @@ class User extends Authenticatable
         parent::boot();
 
         static::deleting(function (User $user) {
-            $user->jobItem()->delete();
+            $user->company->each->delete();
         });
     }
 }

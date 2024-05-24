@@ -21,7 +21,6 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if(!$user) {
-            dd('user not found');
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);

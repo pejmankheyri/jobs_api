@@ -37,7 +37,9 @@ class JobItemPolicy
      */
     public function update(User $user, JobItem $jobItem): Response
     {
-        return $user->id === $jobItem->user_id
+        // dd($jobItem->company->user_id);
+        // dd($user->id);
+        return $user->id === $jobItem->company->user_id
             ? Response::allow()
             : Response::deny('You do not own this job item.');
     }
@@ -48,7 +50,7 @@ class JobItemPolicy
      */
     public function delete(User $user, JobItem $jobItem): Response
     {
-        return $user->id === $jobItem->user_id
+        return $user->id === $jobItem->company->user_id
             ? Response::allow()
             : Response::deny('You do not own this job item.');
     }
