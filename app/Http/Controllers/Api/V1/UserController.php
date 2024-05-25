@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
@@ -17,6 +19,13 @@ class UserController extends Controller
      */
     public function index()
     {
+        // check if user is admin
+        // dd(Auth::user()->roles->first()->id);
+        if (Auth::user()->roles->first()->id !== 1) {
+            return response()->json([
+                'message' => __('message.unauthorized')
+            ], 401);
+        }
         $users = User::orderByIdDesc();
         return UserResource::collection($users);
     }
@@ -27,15 +36,25 @@ class UserController extends Controller
     public function store(StoreRequest $request)
     {
         $validated = $request->validated();
+        $checkRole = Role::findOrFail($validated['role_id'] && $validated['role_id'] !== 1);
 
-        $user = new User();
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->password = $validated['password'];
+        if ($checkRole) {
+            $user = new User();
+            $user->name = $validated['name'];
+            $user->email = $validated['email'];
+            $user->password = $validated['password'];
 
-        $user->save();
+            $user->save();
 
-        return new UserResource($user);
+            // save role
+            $user->roles()->attach($validated['role_id']);
+            return new UserResource($user);
+
+        } else {
+            return response()->json([
+                'message' => __('message.role_not_found')
+            ], 404);
+        }
     }
 
     /**
@@ -44,6 +63,9 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
+        if (Auth::user()->roles->first()->id !== 1) {
+            Gate::authorize('view', $user);
+        }
         return new UserResource($user);
     }
 
@@ -54,7 +76,9 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        Gate::authorize('update', $user);
+        if (Auth::user()->roles->first()->id !== 1) {
+            Gate::authorize('update', $user);
+        }
 
         $validated = $request->validated();
 

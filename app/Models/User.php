@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -57,6 +58,28 @@ class User extends Authenticatable
     public function scopeOrderByIdDesc(Builder $query)
     {
         return $query->orderBy('id', 'desc')->paginate(10);
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function hasRole($roleName)
+    {
+        return $this->roles()->where('name', $roleName)->exists();
+    }
+
+    // get user role
+    public function getRoleAttribute()
+    {
+        return $this->roles->first()->name;
+    }
+
+    // is admin
+    public function isAdmin()
+    {
+        return Auth::user()->roles->first()->id === 1;
     }
 
     protected static function booted(): void

@@ -14,7 +14,7 @@ class CompanyTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $companyCount = (int)$this->command->ask(__('message.how_many_companies'), 10);
+        $companyCount = (int)$this->command->ask(__('message.how_many_companies'), 20);
         $users = User::all();
 
         Company::factory($companyCount)->make()->each(function($comapny) use ($users){

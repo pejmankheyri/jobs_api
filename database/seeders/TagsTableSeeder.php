@@ -13,7 +13,7 @@ class TagsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $tags = collect(['PHP', 'Laravel', 'JavaScript', 'Vue.js', 'React.js', 'Angular.js', 'Node.js', 'Python', 'Ruby', 'Java', 'C#', 'C++', 'C', 'Swift', 'Kotlin', 'Go', 'Rust', 'Dart', 'TypeScript', 'HTML', 'CSS', 'Sass', 'Less' ]);
+        $tags = collect(['PHP', 'Laravel', 'JavaScript', 'Vue.js', 'React.js', 'Node.js', 'Python', 'Java', 'Swift', 'TypeScript', 'HTML', 'CSS']);
 
         $tags->each(function ($tag) {
             Tag::create([
