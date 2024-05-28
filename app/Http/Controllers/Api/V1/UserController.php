@@ -19,9 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        // check if user is admin
-        // dd(Auth::user()->roles->first()->id);
-        if (Auth::user()->roles->first()->id !== 1) {
+        if (Auth::user()->roles->first()->name !== 'admin') {
             return response()->json([
                 'message' => __('message.unauthorized')
             ], 401);
@@ -36,9 +34,10 @@ class UserController extends Controller
     public function store(StoreRequest $request)
     {
         $validated = $request->validated();
-        $checkRole = Role::findOrFail($validated['role_id'] && $validated['role_id'] !== 1);
 
-        if ($checkRole) {
+        $IsNotAdmin = Role::findOrFail($validated['role_id'])->name !== 'admin' ;
+
+        if ($IsNotAdmin) {
             $user = new User();
             $user->name = $validated['name'];
             $user->email = $validated['email'];
@@ -63,7 +62,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
-        if (Auth::user()->roles->first()->id !== 1) {
+        if (Auth::user()->roles->first()->name !== 'admin') {
             Gate::authorize('view', $user);
         }
         return new UserResource($user);
@@ -76,7 +75,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        if (Auth::user()->roles->first()->id !== 1) {
+        if (Auth::user()->roles->first()->name !== 'admin') {
             Gate::authorize('update', $user);
         }
 
@@ -87,6 +86,10 @@ class UserController extends Controller
         $user->password = $validated['password'];
 
         $user->save();
+
+        // update role
+        $user->roles()->attach($validated['role_id']);
+        return new UserResource($user);
 
         return new UserResource($user);
     }

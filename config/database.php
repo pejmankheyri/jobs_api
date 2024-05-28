@@ -59,6 +59,14 @@ return [
             ]) : [],
         ],
 
+        'mysql_testing' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'database' => env('DB_DATABASE_TEST', 'jobs_api_testing'),
+            'username' => env('DB_USERNAME_TEST', 'root'),
+            'password' => env('DB_PASSWORD_TEST', ''),
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),
