@@ -14,15 +14,8 @@ class ShowTest extends TestCase
 
     public function test_users_can_see_their_own_user(): void
     {
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'user']);
-        Role::firstOrCreate(['name' => 'company']);
-
         // Arrange
-        $user = User::factory()->create();
-
-        $userRole = Role::where('name', 'admin')->first();
-        $user->roles()->attach($userRole);
+        $user = $this->createUserWithRole('admin');
 
         // Act
         $response = $this->actingAs($user, 'sanctum')->getJson(route('api.v1.users.show', $user->id));
@@ -41,17 +34,8 @@ class ShowTest extends TestCase
 
     public function test_users_can_not_see_other_users(): void
     {
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'user']);
-        Role::firstOrCreate(['name' => 'company']);
-
-        // Arrange
-        $user = User::factory()->create();
-        $otherUser = User::factory()->create();
-
-        $userRole = Role::where('name', 'user')->first();
-        $user->roles()->attach($userRole);
-        $otherUser->roles()->attach($userRole);
+        $user = $this->createUserWithRole('user');
+        $otherUser = $this->createUserWithRole('user');
 
         // Act
         $response = $this->actingAs($otherUser, 'sanctum')->getJson(route('api.v1.users.show', $user->id));

@@ -33,12 +33,15 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     });
 
     // COMPANIES
-    Route::prefix('companies')->name('companies.')->middleware(['auth:sanctum'])->group(function () {
-        Route::apiResource('/', CompanyController::class)->except(['index', 'show']);
+    Route::prefix('companies')->name('companies.')->group(function () {
+        Route::get('/', [CompanyController::class, 'index'])->name('index');
+        Route::get('/{id}', [CompanyController::class, 'show'])->name('show');
+        Route::post('/', [CompanyController::class, 'store'])->name('store')->middleware('auth:sanctum');
+        Route::put('/{id}', [CompanyController::class, 'update'])->name('update')->middleware('auth:sanctum');
+        Route::delete('/{id}', [CompanyController::class, 'destroy'])->name('destroy')->middleware('auth:sanctum');
         Route::post('/{id}/images', [CompanyImagesController::class, 'store'])->name('images.store');
         Route::delete('/image/{id}', [CompanyImagesController::class, 'destroy'])->name('images.destroy');
     });
-    Route::apiResource('companies', CompanyController::class)->only(['index', 'show']);
 
 
     // TAGS

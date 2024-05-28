@@ -39,7 +39,7 @@ class CompanyController extends Controller
 
         $company->save();
 
-        return new CompanyResource($company);
+        return new CompanyResource($company->load(['location','tags','user','jobItem']));
     }
 
     /**
@@ -71,7 +71,7 @@ class CompanyController extends Controller
 
         $company->save();
 
-        return new CompanyResource($company);
+        return new CompanyResource($company->load(['location','tags','user','jobItem']));
     }
 
     /**

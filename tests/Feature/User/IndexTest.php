@@ -20,18 +20,7 @@ class IndexTest extends TestCase
     public function test_admin_can_see_users_list_with_correct_response(): void
     {
         // Arrange
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'user']);
-        Role::firstOrCreate(['name' => 'company']);
-
-        $admin = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-        ]);
-
-        $adminRole = Role::where('name', 'admin')->first();
-        $admin->roles()->attach($adminRole);
+        $admin = $this->createUserWithRole('admin');
 
         User::factory(10)->create()->each(function ($user) {
             $user->roles()->attach(Role::where('name', 'company')->first());
@@ -58,18 +47,7 @@ class IndexTest extends TestCase
     public function test_users_can_not_see_all_users_list(): void
     {
         // Arrange
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'user']);
-        Role::firstOrCreate(['name' => 'company']);
-
-        $user = User::create([
-            'name' => 'User',
-            'email' => 'user@example.com',
-            'password' => Hash::make('password'),
-        ]);
-
-        $userRole = Role::where('name', 'user')->first();
-        $user->roles()->attach($userRole);
+        $user = $this->createUserWithRole('user');
 
         // Act
         $response = $this->actingAs($user, 'sanctum')->getJson(route('api.v1.users.index'));

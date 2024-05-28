@@ -121,19 +121,4 @@ class IndexTest extends TestCase
             ]
         ]);
     }
-
-    private function createUserWithRole($role): User
-    {
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'user']);
-        Role::firstOrCreate(['name' => 'company']);
-
-        $user = User::factory()->create();
-
-        $userRole = Role::where('name', $role)->first();
-
-        $user->roles()->attach($userRole);
-
-        return $user;
-    }
 }

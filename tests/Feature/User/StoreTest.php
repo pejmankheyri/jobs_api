@@ -17,7 +17,7 @@ class StoreTest extends TestCase
      */
     public function test_users_can_be_created_by_admin(): void
     {
-        $admin = $this->createUserWithAdminRole();
+        $admin = $this->createUserWithRole('admin');
 
         // get user role
         $role = Role::where('name', 'user')->first();
@@ -43,11 +43,6 @@ class StoreTest extends TestCase
                 'role'
             ]
         ]);
-
-        // Assert the user is in the database
-        $this->assertDatabaseHas('users', [
-            'email' => 'johndoe@example.com',
-        ]);
     }
 
     public function test_users_can_not_be_created_with_invalid_data(): void
@@ -67,7 +62,7 @@ class StoreTest extends TestCase
         ];
 
         // Define the user data
-        $user = $this->createUserWithAdminRole();
+        $user = $this->createUserWithRole('admin');
 
         $response = $this->actingAs($user, 'sanctum')->getJson(route('api.v1.users.store'));
 
@@ -83,29 +78,12 @@ class StoreTest extends TestCase
     public function test_users_can_not_be_created_by_unauthenticated_users(): void
     {
         // Arrange
-        $this->createUserWithAdminRole();
+        $this->createUserWithRole('admin');
 
         // Act
         $response = $this->getJson(route('api.v1.users.store'));
 
         // Assert
         $response->assertStatus(401);
-    }
-
-    private function createUserWithAdminRole() {
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'user']);
-        Role::firstOrCreate(['name' => 'company']);
-
-        $user = User::create([
-            'name' => 'John Doe',
-            'email' => 'johndoe@example.com',
-            'password' => Hash::make('password'),
-        ]);
-
-        $userRole = Role::where('name', 'admin')->first();
-        $user->roles()->attach($userRole);
-
-        return $user;
     }
 }

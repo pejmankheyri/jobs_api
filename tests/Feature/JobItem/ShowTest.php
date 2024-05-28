@@ -124,35 +124,4 @@ class ShowTest extends TestCase
             ]
         ]);
     }
-
-    private function createJobItem($company)
-    {
-        $jobItem = JobItem::factory()->make();
-        $jobItem->company_id = $company->id;
-        $jobItem->save();
-
-        return $jobItem;
-    }
-
-    private function createCompany($admin)
-    {
-        $company = Company::factory()->make();
-        $company->user_id = $admin->id;
-        $company->save();
-
-        return $company;
-    }
-
-    private function createUserWithRole($role): User
-    {
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'user']);
-        Role::firstOrCreate(['name' => 'company']);
-
-        $user = User::factory()->create();
-
-        $user->roles()->attach(Role::where('name', $role)->first());
-
-        return $user;
-    }
 }

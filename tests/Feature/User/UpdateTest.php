@@ -16,19 +16,7 @@ class UpdateTest extends TestCase
     public function test_users_can_update_their_own_user(): void
     {
 
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'user']);
-        Role::firstOrCreate(['name' => 'company']);
-
-        // Create a user
-        $user = User::factory()->create([
-            'name' => 'Old Name',
-            'email' => 'oldemail@example.com',
-            'password' => bcrypt('password'), // Assuming bcrypt is used for hashing passwords
-        ]);
-
-        $userRole = Role::where('name', 'user')->first();
-        $user->roles()->attach($userRole);
+        $user = $this->createUserWithRole('user');
 
         // Define the updated user data
         $updatedUserData = [
@@ -65,17 +53,8 @@ class UpdateTest extends TestCase
 
     public function test_users_can_not_update_other_users(): void
     {
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'user']);
-        Role::firstOrCreate(['name' => 'company']);
-
-        // Create two users
-        $user = User::factory()->create();
-        $otherUser = User::factory()->create();
-
-        $userRole = Role::where('name', 'user')->first();
-        $user->roles()->attach($userRole);
-        $otherUser->roles()->attach($userRole);
+        $user = $this->createUserWithRole('user');
+        $otherUser = $this->createUserWithRole('user');
 
         // Define the updated user data
         $updatedUserData = [
