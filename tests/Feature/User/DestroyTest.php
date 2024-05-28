@@ -98,5 +98,4 @@ class DestroyTest extends TestCase
 
         return $user;
     }
-
 }

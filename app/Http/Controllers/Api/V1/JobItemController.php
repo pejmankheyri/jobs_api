@@ -63,7 +63,7 @@ class JobItemController extends Controller
 
         $jobItem->title = $validated['title'];
         $jobItem->description = $validated['description'];
-        $jobItem->company_id = $id;
+        $jobItem->company_id = $jobItem->company_id;
 
         $jobItem->save();
 
@@ -72,7 +72,7 @@ class JobItemController extends Controller
         $tags = $this->getTags($tagNames);
         $jobItem->tags()->sync($tags);
 
-        return new JobItemResource($jobItem);
+        return new JobItemResource($jobItem->load(['tags', 'company']));
     }
 
     /**

@@ -24,10 +24,13 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     });
 
     // JOBS
-    Route::prefix('jobs')->name('jobs.')->middleware(['auth:sanctum'])->group(function () {
-        Route::apiResource('/', JobItemController::class)->except(['index', 'show']);
+    Route::prefix('jobs')->name('jobs.')->group(function () {
+        Route::get('/', [JobItemController::class, 'index'])->name('index');
+        Route::get('/{id}', [JobItemController::class, 'show'])->name('show');
+        Route::post('/', [JobItemController::class, 'store'])->name('store')->middleware('auth:sanctum');
+        Route::put('/{id}', [JobItemController::class, 'update'])->name('update')->middleware('auth:sanctum');
+        Route::delete('/{id}', [JobItemController::class, 'destroy'])->name('destroy')->middleware('auth:sanctum');
     });
-    Route::apiResource('jobs', JobItemController::class)->only(['index', 'show']);
 
     // COMPANIES
     Route::prefix('companies')->name('companies.')->middleware(['auth:sanctum'])->group(function () {
