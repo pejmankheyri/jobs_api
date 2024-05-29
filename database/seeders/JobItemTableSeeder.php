@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Company;
 use App\Models\JobItem;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -14,9 +15,11 @@ class JobItemTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $jobCount = (int)$this->command->ask('How many jobs would you like?', 50);
+        $jobCount = (int)$this->command->ask(__('message.how_many_jobs'), 50);
+        $company = Company::all();
 
-        JobItem::factory($jobCount)->make()->each(function($jobItem) {
+        JobItem::factory($jobCount)->make()->each(function($jobItem) use ($company){
+            $jobItem->company_id = $company->random()->id;
             $jobItem->save();
         });
     }
