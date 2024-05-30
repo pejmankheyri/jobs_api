@@ -18,7 +18,7 @@ class JobItemController extends Controller
      */
     public function index()
     {
-        $jobs = JobItem::with(['tags', 'company'])->orderByIdDesc();
+        $jobs = JobItem::with(['tags', 'company','company.location'])->orderByIdDesc();
         return JobItemResource::collection($jobs);
     }
 
