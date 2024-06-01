@@ -18,7 +18,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index')->middleware('auth:sanctum', 'role:admin');
         Route::get('/{id}', [UserController::class, 'show'])->name('show')->middleware('auth:sanctum');
-        Route::post('/', [UserController::class, 'store'])->name('store')->middleware('auth:sanctum');
+        Route::post('/', [UserController::class, 'store'])->name('store');
         Route::put('/{id}', [UserController::class, 'update'])->name('update')->middleware('auth:sanctum');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy')->middleware('auth:sanctum', 'role:admin');
     });
