@@ -26,6 +26,18 @@ class JobItem extends Model
         return $this->morphToMany(Tag::class, 'taggable')->withTimestamps();
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'job_user')->withPivot('message')->withTimestamps();
+    }
+
+
+    // public function scopeSearch(Builder $query, $search)
+    // {
+    //     return $query->where('title', 'like', '%' . $search . '%')
+    //         ->orWhere('description', 'like', '%' . $search . '%');
+    // }
+
     public function scopeOrderByIdDesc(Builder $query)
     {
         return $query->orderBy('id', 'desc')->paginate(10);

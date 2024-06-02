@@ -68,4 +68,14 @@ class JobItemPolicy
     {
         return false;
     }
+
+    public function apply(User $user, JobItem $jobItem): bool
+    {
+        return $user->id !== $jobItem->company->user_id;
+    }
+
+    public function viewApplicants(User $user, JobItem $jobItem): bool
+    {
+        return $user->id === $jobItem->company->user_id;
+    }
 }

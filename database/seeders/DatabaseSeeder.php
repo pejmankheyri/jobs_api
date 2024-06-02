@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             JobItemTagTableSeeder::class,
             CompanyTagTableSeeder::class,
             CompanyLocationTableSeeder::class,
+            AppliedJobsSeeder::class,
         ]);
     }
 }
