@@ -30,6 +30,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::post('/', [JobItemController::class, 'store'])->name('store')->middleware('auth:sanctum');
         Route::put('/{id}', [JobItemController::class, 'update'])->name('update')->middleware('auth:sanctum');
         Route::delete('/{id}', [JobItemController::class, 'destroy'])->name('destroy')->middleware('auth:sanctum');
+        Route::post('/{id}/apply', [JobItemController::class, 'apply'])->name('apply')->middleware('auth:sanctum');
+        Route::get('/{id}/applicants', [JobItemController::class, 'applicants'])->name('applicants')->middleware('auth:sanctum');
     });
 
     // COMPANIES

@@ -55,15 +55,21 @@ class User extends Authenticatable
         return $this->hasMany(Company::class);
     }
 
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function jobs()
+    {
+        return $this->belongsToMany(JobItem::class, 'job_user')->withPivot('message')->withTimestamps();
+    }
+
     public function scopeOrderByIdDesc(Builder $query)
     {
         return $query->orderBy('id', 'desc')->paginate(10);
     }
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
-    }
 
     public function hasRole($roleName)
     {

@@ -23,4 +23,6 @@ return [
     'how_many_users'                        => 'How many users would you like?',
     'user_not_found'                        => 'User not found',
     'user_deleted'                          => 'User :email with id :id deleted successfully!',
+    'already_applied'                       => 'You have already applied to this job',
+    'job_applied'                           => 'You have successfully applied to this job',
 ];
