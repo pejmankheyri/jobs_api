@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\CompanyImagesController;
 use App\Http\Controllers\Api\V1\CompanyTagController;
 use App\Http\Controllers\Api\V1\JobItemController;
 use App\Http\Controllers\Api\V1\JobTagController;
+use App\Http\Controllers\Api\v1\SearchController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +23,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::put('/{id}', [UserController::class, 'update'])->name('update')->middleware('auth:sanctum');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy')->middleware('auth:sanctum', 'role:admin');
         Route::get('/{id}/jobs', [UserController::class, 'jobs'])->name('jobs')->middleware('auth:sanctum');
-        Route::post('/avatar', [UserController::class, 'uploadAvatar'])->name('avatar')->middleware('auth:sanctum');
+        Route::post('/avatar', [UserController::class, 'uploadAvatar'])->name('upload-avatar')->middleware('auth:sanctum');
         Route::get('/{id}/avatar', [UserController::class, 'getAvatar'])->name('avatar')->middleware('auth:sanctum');
         Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password')->middleware('auth:sanctum');
     });
@@ -53,6 +54,12 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     // TAGS
     Route::get('/jobs/tags/{tagId}', [JobTagController::class, 'index']);
     Route::get('/companies/tags/{tagId}', [CompanyTagController::class, 'index']);
+
+    // SEARCH
+    Route::prefix('search')->name('search.')->group(function () {
+        Route::get('/jobs', [SearchController::class, 'jobs'])->name('jobs-search');
+        Route::get('/locations', [SearchController::class, 'locations'])->name('locations-search');
+    });
 
 });
 
