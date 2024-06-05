@@ -62,4 +62,19 @@ class UserPolicy
     {
         return false;
     }
+
+    public function jobs(User $user, User $model): bool
+    {
+        return $user->id === $model->id;
+    }
+
+    public function changePass(User $user, User $model): bool
+    {
+        return $user->id === $model->id;
+    }
+
+    public function uploadAvatar(User $user, User $model): bool
+    {
+        return $user->id === $model->id;
+    }
 }
