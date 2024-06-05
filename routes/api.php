@@ -21,6 +21,10 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::post('/', [UserController::class, 'store'])->name('store');
         Route::put('/{id}', [UserController::class, 'update'])->name('update')->middleware('auth:sanctum');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy')->middleware('auth:sanctum', 'role:admin');
+        Route::get('/{id}/jobs', [UserController::class, 'jobs'])->name('jobs')->middleware('auth:sanctum');
+        Route::post('/avatar', [UserController::class, 'uploadAvatar'])->name('avatar')->middleware('auth:sanctum');
+        Route::get('/{id}/avatar', [UserController::class, 'getAvatar'])->name('avatar')->middleware('auth:sanctum');
+        Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password')->middleware('auth:sanctum');
     });
 
     // JOBS
