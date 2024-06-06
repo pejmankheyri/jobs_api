@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePassRequest;
 use App\Http\Requests\User\StoreAvatarRequest;
+use App\Http\Requests\User\StoreCvRequest;
 use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\JobItemResource;
@@ -47,6 +48,7 @@ class UserController extends Controller
             $user = new User();
             $user->name = $validated['name'];
             $user->email = $validated['email'];
+            $user->phone = $validated['phone'];
             $user->password = $validated['password'];
 
             $user->save();
@@ -88,6 +90,7 @@ class UserController extends Controller
         $validated = $request->validated();
 
         $user->name = $validated['name'];
+        $user->phone = $validated['phone'];
 
         $user->save();
 
@@ -194,5 +197,30 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(['message' => 'Password changed successfully']);
+    }
+
+    public function uploadCV(StoreCvRequest $request)
+    {
+        $validated = $request->validated();
+        $user = Auth::user();
+
+        Gate::authorize('uploadCV', $user);
+
+        if ($request->hasFile('cv')) {
+            $cv = $request->file('cv');
+            $filename = time() . '.' . $cv->getClientOriginalExtension();
+            $path = $cv->storeAs('cvs', $filename, 'public');
+
+            // Delete old cv if exists
+            if ($user->cv) {
+                Storage::disk('public')->delete($user->cv);
+            }
+
+            // Update user's cv path
+            $user->cv = $path;
+            $user->save();
+        }
+
+        return response()->json(['message' => 'CV uploaded successfully', 'cv' => Storage::url($user->cv)], 200);
     }
 }

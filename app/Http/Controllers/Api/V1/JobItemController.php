@@ -10,6 +10,7 @@ use App\Http\Resources\JobApplicantsResource;
 use App\Http\Resources\JobItemResource;
 use App\Models\JobItem;
 use App\Models\Tag;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -18,9 +19,13 @@ class JobItemController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $jobs = JobItem::with(['tags', 'company','company.location'])->orderByIdDesc();
+        $jobs = JobItem::with(['tags', 'company','company.location'])
+            ->where('title', 'like', '%' . $request->q . '%')
+            ->orWhere('description', 'like', '%' . $request->q . '%')
+            ->orderByIdDesc();
+
         return JobItemResource::collection($jobs);
     }
 
