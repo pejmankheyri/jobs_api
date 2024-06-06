@@ -77,4 +77,9 @@ class UserPolicy
     {
         return $user->id === $model->id;
     }
+
+    public function uploadCV(User $user, User $model): bool
+    {
+        return $user->id === $model->id;
+    }
 }

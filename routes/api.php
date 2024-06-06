@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CompanyController;
 use App\Http\Controllers\Api\V1\CompanyImagesController;
 use App\Http\Controllers\Api\V1\CompanyTagController;
+use App\Http\Controllers\Api\V1\CvController;
 use App\Http\Controllers\Api\V1\JobItemController;
 use App\Http\Controllers\Api\V1\JobTagController;
 use App\Http\Controllers\Api\v1\SearchController;
@@ -13,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->name('api.v1.')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-
 
     // USERS
     Route::prefix('users')->name('users.')->group(function () {
@@ -26,6 +26,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::post('/avatar', [UserController::class, 'uploadAvatar'])->name('upload-avatar')->middleware('auth:sanctum');
         Route::get('/{id}/avatar', [UserController::class, 'getAvatar'])->name('avatar')->middleware('auth:sanctum');
         Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password')->middleware('auth:sanctum');
+        Route::post('/cv', [UserController::class, 'uploadCV'])->name('cv')->middleware('auth:sanctum');
     });
 
     // JOBS
@@ -49,7 +50,6 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::post('/{id}/images', [CompanyImagesController::class, 'store'])->name('images.store');
         Route::delete('/image/{id}', [CompanyImagesController::class, 'destroy'])->name('images.destroy');
     });
-
 
     // TAGS
     Route::get('/jobs/tags/{tagId}', [JobTagController::class, 'index']);
