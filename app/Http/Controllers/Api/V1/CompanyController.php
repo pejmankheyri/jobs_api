@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Company\StoreLogoRequest;
 use App\Http\Requests\Company\StoreRequest;
 use App\Http\Requests\Company\UpdateRequest;
 use App\Http\Resources\CompanyResource;
@@ -10,6 +11,7 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -88,5 +90,31 @@ class CompanyController extends Controller
                 'id' => $company->id
             ])
         ]);
+    }
+
+    /**
+     * Upload company logo.
+     */
+    public function uploadLogo(StoreLogoRequest $request, $id)
+    {
+        $company = Company::findOrFail($id);
+        Gate::authorize('storeLogo', $company);
+
+        $validated = $request->validated();
+
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $filename = time() . '.' . $logo->getClientOriginalExtension();
+            $path = $logo->storeAs('logos', $filename, 'public');
+
+            if ($company->logo) {
+                Storage::disk('public')->delete($company->logo);
+            }
+
+            $company->logo = $path;
+            $company->save();
+        }
+
+        return new CompanyResource($company->load(['location','tags','user','jobItem']));
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\User\StoreAvatarRequest;
 use App\Http\Requests\User\StoreCvRequest;
 use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
+use App\Http\Resources\CompanyResource;
 use App\Http\Resources\JobItemResource;
 use App\Http\Resources\UserResource;
 use App\Models\Role;
@@ -69,12 +70,27 @@ class UserController extends Controller
      */
     public function show()
     {
-
         $user = Auth::user();
-        if (Auth::user()->roles->first()->name !== 'admin') {
+        $userRole = Auth::user()->roles->first()->name;
+        if ($userRole !== 'admin') {
             Gate::authorize('view', $user);
         }
-        return new UserResource($user);
+
+        switch ($userRole) {
+            case 'admin':
+                return new UserResource($user);
+                break;
+            case 'company':
+                return new UserResource($user->load(['companies']));
+                break;
+            case 'user':
+                return new UserResource($user);
+                break;
+            default:
+                return response()->json([
+                    'message' => __('message.role_not_found')
+                ], 404);
+        }
     }
 
     /**
@@ -114,9 +130,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function jobs(Request $request, $id)
+    public function jobs(Request $request)
     {
-        $user = User::findOrFail($id);
+        $user = Auth::user();
         Gate::authorize('jobs', $user);
 
         $perPage = $request->query('per_page', 10);
@@ -140,6 +156,35 @@ class UserController extends Controller
             ->paginate($perPage);
 
         return JobItemResource::collection($jobs);
+    }
+
+    public function companies(Request $request)
+    {
+        $user = Auth::user();
+        Gate::authorize('companies', $user);
+
+        $perPage = $request->query('per_page', 10);
+
+        $sort = $request->query('sort', 'id');
+        $order = $request->query('order', 'desc');
+        $search = $request->query('q', '');
+
+        if (!in_array($order, ['asc', 'desc'])) {
+            return response()->json(['message' => 'Invalid sort parameter'], 400);
+        }
+
+        $companies = $user->companies()
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', '%' . $search . '%')
+                      ->orWhere('description', 'like', '%' . $search . '%');
+                });
+            })
+            ->with(['location', 'tags', 'jobItem'])
+            ->orderBy($sort, $order)
+            ->paginate($perPage);
+
+        return CompanyResource::collection($companies);
     }
 
     public function uploadAvatar(StoreAvatarRequest $request)

@@ -23,16 +23,7 @@ class UserTableSeeder extends Seeder
         //     'email' => 'pejman@gmail.com',
         // ])->create();
 
-        // Create a user and assign the admin role
-        $admin = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'phone' => '1234567890',
-            'password' => Hash::make('password'),
-        ]);
-
-        $adminRole = Role::where('name', 'admin')->first();
-        $admin->roles()->attach($adminRole);
+        $this->createUsers();
 
         // Create roles if they don't exist
         Role::firstOrCreate(['name' => 'admin']);
@@ -65,5 +56,37 @@ class UserTableSeeder extends Seeder
         Storage::disk('public')->put($folder . '/' . $fileName, file_get_contents($url));
 
         return $folder . '/' . $fileName;
+    }
+
+    private function createUsers() {
+        $admin = User::create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'phone' => '1234567890',
+            'password' => Hash::make('password'),
+        ]);
+
+        $adminRole = Role::where('name', 'admin')->first();
+        $admin->roles()->attach($adminRole);
+
+        $user = User::create([
+            'name' => 'Applier User',
+            'email' => 'user@example.com',
+            'phone' => '1234567890',
+            'password' => Hash::make('password'),
+        ]);
+
+        $userRole = Role::where('name', 'user')->first();
+        $user->roles()->attach($userRole);
+
+        $company = User::create([
+            'name' => 'Company User',
+            'email' => 'company@example.com',
+            'phone' => '1234567890',
+            'password' => Hash::make('password'),
+        ]);
+
+        $companyRole = Role::where('name', 'company')->first();
+        $company->roles()->attach($companyRole);
     }
 }

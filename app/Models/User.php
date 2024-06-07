@@ -53,7 +53,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function company()
+    public function companies()
     {
         return $this->hasMany(Company::class);
     }

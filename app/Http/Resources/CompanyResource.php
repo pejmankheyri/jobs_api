@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyResource extends JsonResource
 {
@@ -21,6 +22,7 @@ class CompanyResource extends JsonResource
             'rating' => $this->rating,
             'website' => $this->website,
             'employes' => $this->employes,
+            'logo' => Storage::url($this->logo),
             'create_dates' => [
                 'created_at_human' => $this->created_at->diffForHumans(),
                 'created_at' => $this->created_at

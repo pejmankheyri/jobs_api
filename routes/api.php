@@ -22,7 +22,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::post('/', [UserController::class, 'store'])->name('store');
         Route::put('/{id}', [UserController::class, 'update'])->name('update')->middleware('auth:sanctum');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy')->middleware('auth:sanctum', 'role:admin');
-        Route::get('/{id}/jobs', [UserController::class, 'jobs'])->name('jobs')->middleware('auth:sanctum');
+        Route::get('/jobs', [UserController::class, 'jobs'])->name('jobs')->middleware('auth:sanctum');
+        Route::get('/companies', [UserController::class, 'companies'])->name('companies')->middleware('auth:sanctum');
         Route::post('/avatar', [UserController::class, 'uploadAvatar'])->name('upload-avatar')->middleware('auth:sanctum');
         Route::get('/{id}/avatar', [UserController::class, 'getAvatar'])->name('avatar')->middleware('auth:sanctum');
         Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password')->middleware('auth:sanctum');
@@ -49,6 +50,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::delete('/{id}', [CompanyController::class, 'destroy'])->name('destroy')->middleware('auth:sanctum');
         Route::post('/{id}/images', [CompanyImagesController::class, 'store'])->name('images.store');
         Route::delete('/image/{id}', [CompanyImagesController::class, 'destroy'])->name('images.destroy');
+        Route::post('/{id}/logo', [CompanyController::class, 'uploadLogo'])->name('logo')->middleware('auth:sanctum');
     });
 
     // TAGS
