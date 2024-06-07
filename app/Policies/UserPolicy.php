@@ -68,6 +68,11 @@ class UserPolicy
         return $user->id === $model->id;
     }
 
+    public function companies(User $user, User $model): bool
+    {
+        return $user->id === $model->id;
+    }
+
     public function changePass(User $user, User $model): bool
     {
         return $user->id === $model->id;

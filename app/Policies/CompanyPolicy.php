@@ -67,4 +67,14 @@ class CompanyPolicy
     {
         return false;
     }
+
+    /**
+     * Determine whether the user can store logo.
+     */
+    public function storeLogo(User $user, Company $company): Response
+    {
+        return $user->id === $company->user_id
+            ? Response::allow()
+            : Response::deny(__('message.you_not_own_this_company'));
+    }
 }
