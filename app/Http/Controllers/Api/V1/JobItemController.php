@@ -12,6 +12,7 @@ use App\Models\JobItem;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 
 class JobItemController extends Controller
@@ -21,10 +22,13 @@ class JobItemController extends Controller
      */
     public function index(Request $request)
     {
-        $jobs = JobItem::with(['tags', 'company','company.location'])
-            ->where('title', 'like', '%' . $request->q . '%')
-            ->orWhere('description', 'like', '%' . $request->q . '%')
-            ->orderByIdDesc();
+        if ($request->q) {
+           $jobs = JobItem::getQueryWithRelations($request->q);
+        } else {
+            $jobs = Cache::remember('jobs', 60, function () use ($request) {
+                return JobItem::getQueryWithRelations($request->q);
+            });
+        }
 
         return JobItemResource::collection($jobs);
     }
@@ -54,7 +58,10 @@ class JobItemController extends Controller
      */
     public function show($id)
     {
-        $jobItem = JobItem::with(['tags', 'company'])->findOrFail($id);
+        $jobItem = Cache::remember("job-{$id}", 60, function() use($id) {
+            return JobItem::with(['tags', 'company'])->findOrFail($id);
+        });
+
         return new JobItemResource($jobItem);
     }
 
