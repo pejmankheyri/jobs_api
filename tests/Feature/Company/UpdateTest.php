@@ -2,11 +2,7 @@
 
 namespace Tests\Feature\Company;
 
-use App\Models\Company;
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class UpdateTest extends TestCase
@@ -53,13 +49,13 @@ class UpdateTest extends TestCase
                                 'name',
                                 'create_dates' => [
                                     'created_at_human',
-                                    'created_at'
+                                    'created_at',
                                 ],
                                 'update_dates' => [
                                     'updated_at_human',
-                                    'updated_at'
-                                ]
-                            ]
+                                    'updated_at',
+                                ],
+                            ],
                         ],
                         'company' => [
                             'id',
@@ -70,10 +66,10 @@ class UpdateTest extends TestCase
                             'employes',
                             'create_dates',
                             'update_dates',
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ]);
     }
 

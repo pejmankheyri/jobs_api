@@ -34,9 +34,9 @@ class JobItem extends Model
 
     public function scopeGetQueryWithRelations(Builder $query, $q)
     {
-        return $query->with(['tags', 'company','company.location'])
-            ->where('title', 'like', '%' . $q . '%')
-            ->orWhere('description', 'like', '%' . $q . '%')
+        return $query->with(['tags', 'company', 'company.location'])
+            ->where('title', 'like', '%'.$q.'%')
+            ->orWhere('description', 'like', '%'.$q.'%')
             ->orderBy('id', 'desc')->paginate(10);
     }
 

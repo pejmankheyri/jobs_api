@@ -29,10 +29,11 @@ class UserController extends Controller
     {
         if (Auth::user()->roles->first()->name !== 'admin') {
             return response()->json([
-                'message' => __('message.unauthorized')
+                'message' => __('message.unauthorized'),
             ], 401);
         }
         $users = User::orderByIdDesc();
+
         return UserResource::collection($users);
     }
 
@@ -43,7 +44,7 @@ class UserController extends Controller
     {
         $validated = $request->validated();
 
-        $IsNotAdmin = Role::findOrFail($validated['role_id'])->name !== 'admin' ;
+        $IsNotAdmin = Role::findOrFail($validated['role_id'])->name !== 'admin';
 
         if ($IsNotAdmin) {
             $user = new User();
@@ -56,11 +57,12 @@ class UserController extends Controller
 
             // save role
             $user->roles()->attach($validated['role_id']);
+
             return new UserResource($user);
 
         } else {
             return response()->json([
-                'message' => __('message.role_not_found')
+                'message' => __('message.role_not_found'),
             ], 404);
         }
     }
@@ -88,7 +90,7 @@ class UserController extends Controller
                 break;
             default:
                 return response()->json([
-                    'message' => __('message.role_not_found')
+                    'message' => __('message.role_not_found'),
                 ], 404);
         }
     }
@@ -122,11 +124,12 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         Gate::authorize('delete', $user);
         $user->delete();
+
         return response()->json([
             'message' => __('message.user_deleted', [
                 'email' => $user->email,
-                'id' => $user->id
-            ])
+                'id' => $user->id,
+            ]),
         ]);
     }
 
@@ -141,15 +144,15 @@ class UserController extends Controller
         $order = $request->query('order', 'desc');
         $search = $request->query('q', '');
 
-        if (!in_array($order, ['asc', 'desc'])) {
+        if (! in_array($order, ['asc', 'desc'])) {
             return response()->json(['message' => 'Invalid sort parameter'], 400);
         }
 
         $jobs = $user->jobs()
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', '%' . $search . '%')
-                      ->orWhere('description', 'like', '%' . $search . '%');
+                    $q->where('title', 'like', '%'.$search.'%')
+                        ->orWhere('description', 'like', '%'.$search.'%');
                 });
             })
             ->orderBy($sort, $order)
@@ -169,15 +172,15 @@ class UserController extends Controller
         $order = $request->query('order', 'desc');
         $search = $request->query('q', '');
 
-        if (!in_array($order, ['asc', 'desc'])) {
+        if (! in_array($order, ['asc', 'desc'])) {
             return response()->json(['message' => 'Invalid sort parameter'], 400);
         }
 
         $companies = $user->companies()
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', '%' . $search . '%')
-                      ->orWhere('description', 'like', '%' . $search . '%');
+                    $q->where('title', 'like', '%'.$search.'%')
+                        ->orWhere('description', 'like', '%'.$search.'%');
                 });
             })
             ->with(['location', 'tags', 'jobItem'])
@@ -198,7 +201,7 @@ class UserController extends Controller
         // Handle the user upload of avatar
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $filename = time() . '.' . $avatar->getClientOriginalExtension();
+            $filename = time().'.'.$avatar->getClientOriginalExtension();
             $path = $avatar->storeAs('avatars', $filename, 'public');
 
             // Delete old avatar if exists
@@ -218,7 +221,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        if (!$user->avatar) {
+        if (! $user->avatar) {
             return response()->json(['message' => 'No avatar found'], 404);
         }
 
@@ -233,9 +236,9 @@ class UserController extends Controller
 
         Gate::authorize('changePass', $user);
 
-        if (!Hash::check($validated['current_password'], $user->password)) {
+        if (! Hash::check($validated['current_password'], $user->password)) {
             throw ValidationException::withMessages([
-                'current_password' => ['The provided password does not match your current password.']
+                'current_password' => ['The provided password does not match your current password.'],
             ]);
         }
 
@@ -254,7 +257,7 @@ class UserController extends Controller
 
         if ($request->hasFile('cv')) {
             $cv = $request->file('cv');
-            $filename = time() . '.' . $cv->getClientOriginalExtension();
+            $filename = time().'.'.$cv->getClientOriginalExtension();
             $path = $cv->storeAs('cvs', $filename, 'public');
 
             // Delete old cv if exists

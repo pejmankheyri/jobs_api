@@ -5,12 +5,10 @@ namespace Tests\Feature\User;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class UpdateTest extends TestCase
 {
-
     use RefreshDatabase;
 
     public function test_users_can_update_their_own_user(): void
@@ -39,8 +37,8 @@ class UpdateTest extends TestCase
                 'id',
                 'name',
                 'email',
-                'role'
-            ]
+                'role',
+            ],
         ]);
 
         // Assert the user is updated in the database

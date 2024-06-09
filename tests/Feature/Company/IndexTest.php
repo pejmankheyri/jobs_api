@@ -2,10 +2,7 @@
 
 namespace Tests\Feature\Company;
 
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class IndexTest extends TestCase
@@ -33,11 +30,11 @@ class IndexTest extends TestCase
                     'employes',
                     'create_dates' => [
                         'created_at_human',
-                        'created_at'
+                        'created_at',
                     ],
                     'update_dates' => [
                         'updated_at_human',
-                        'updated_at'
+                        'updated_at',
                     ],
                     'user' => [
                         'id',
@@ -52,13 +49,13 @@ class IndexTest extends TestCase
                             'description',
                             'create_dates' => [
                                 'created_at_human',
-                                'created_at'
+                                'created_at',
                             ],
                             'update_dates' => [
                                 'updated_at_human',
-                                'updated_at'
+                                'updated_at',
                             ],
-                        ]
+                        ],
                     ],
                     'tags' => [
                         '*' => [
@@ -66,13 +63,13 @@ class IndexTest extends TestCase
                             'name',
                             'create_dates' => [
                                 'created_at_human',
-                                'created_at'
+                                'created_at',
                             ],
                             'update_dates' => [
                                 'updated_at_human',
-                                'updated_at'
-                            ]
-                        ]
+                                'updated_at',
+                            ],
+                        ],
                     ],
                     'location' => [
                         'id',
@@ -81,9 +78,9 @@ class IndexTest extends TestCase
                         'state',
                         'country',
                         'zip_code',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
     }
 }

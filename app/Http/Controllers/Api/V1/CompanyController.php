@@ -8,7 +8,6 @@ use App\Http\Requests\Company\StoreRequest;
 use App\Http\Requests\Company\UpdateRequest;
 use App\Http\Resources\CompanyResource;
 use App\Models\Company;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -20,7 +19,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $comapanies = Company::with(['location','tags','user','jobItem'])->orderByIdDesc();
+        $comapanies = Company::with(['location', 'tags', 'user', 'jobItem'])->orderByIdDesc();
+
         return CompanyResource::collection($comapanies);
     }
 
@@ -41,7 +41,7 @@ class CompanyController extends Controller
 
         $company->save();
 
-        return new CompanyResource($company->load(['location','tags','user','jobItem']));
+        return new CompanyResource($company->load(['location', 'tags', 'user', 'jobItem']));
     }
 
     /**
@@ -49,7 +49,8 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        $company = Company::with(['location','tags','user','jobItem'])->findOrFail($id);
+        $company = Company::with(['location', 'tags', 'user', 'jobItem'])->findOrFail($id);
+
         return new CompanyResource($company);
     }
 
@@ -73,7 +74,7 @@ class CompanyController extends Controller
 
         $company->save();
 
-        return new CompanyResource($company->load(['location','tags','user','jobItem']));
+        return new CompanyResource($company->load(['location', 'tags', 'user', 'jobItem']));
     }
 
     /**
@@ -84,11 +85,12 @@ class CompanyController extends Controller
         $company = Company::findOrFail($id);
         Gate::authorize('delete', $company);
         $company->delete();
+
         return response()->json([
             'message' => __('message.company_removed', [
                 'title' => $company->title,
-                'id' => $company->id
-            ])
+                'id' => $company->id,
+            ]),
         ]);
     }
 
@@ -104,7 +106,7 @@ class CompanyController extends Controller
 
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
-            $filename = time() . '.' . $logo->getClientOriginalExtension();
+            $filename = time().'.'.$logo->getClientOriginalExtension();
             $path = $logo->storeAs('logos', $filename, 'public');
 
             if ($company->logo) {
@@ -115,6 +117,6 @@ class CompanyController extends Controller
             $company->save();
         }
 
-        return new CompanyResource($company->load(['location','tags','user','jobItem']));
+        return new CompanyResource($company->load(['location', 'tags', 'user', 'jobItem']));
     }
 }

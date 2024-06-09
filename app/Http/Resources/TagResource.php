@@ -19,11 +19,11 @@ class TagResource extends JsonResource
             'name' => $this->name,
             'create_dates' => [
                 'created_at_human' => $this->created_at->diffForHumans(),
-                'created_at' => $this->created_at
+                'created_at' => $this->created_at,
             ],
             'update_dates' => [
                 'updated_at_human' => $this->updated_at->diffForHumans(),
-                'updated_at' => $this->updated_at
+                'updated_at' => $this->updated_at,
             ],
         ];
     }

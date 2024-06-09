@@ -23,7 +23,7 @@ class JobItemController extends Controller
     public function index(Request $request)
     {
         if ($request->q) {
-           $jobs = JobItem::getQueryWithRelations($request->q);
+            $jobs = JobItem::getQueryWithRelations($request->q);
         } else {
             $jobs = Cache::remember('jobs', 60, function () use ($request) {
                 return JobItem::getQueryWithRelations($request->q);
@@ -58,7 +58,7 @@ class JobItemController extends Controller
      */
     public function show($id)
     {
-        $jobItem = Cache::remember("job-{$id}", 60, function() use($id) {
+        $jobItem = Cache::remember("job-{$id}", 60, function () use ($id) {
             return JobItem::with(['tags', 'company'])->findOrFail($id);
         });
 
@@ -97,11 +97,12 @@ class JobItemController extends Controller
         $jobItem = JobItem::findOrFail($id);
         Gate::authorize('delete', $jobItem);
         $jobItem->delete();
+
         return response()->json([
             'message' => __('message.job_removed', [
                 'title' => $jobItem->title,
-                'id' => $jobItem->id
-            ])
+                'id' => $jobItem->id,
+            ]),
         ]);
     }
 
@@ -135,6 +136,7 @@ class JobItemController extends Controller
         Gate::authorize('viewApplicants', $job);
 
         $applicants = $job->users()->get();
+
         return JobApplicantsResource::collection($applicants);
     }
 
@@ -148,6 +150,7 @@ class JobItemController extends Controller
             $tag = Tag::firstOrCreate(['name' => $tagName]);
             $tags[] = $tag->id;
         }
+
         return $tags;
     }
 }

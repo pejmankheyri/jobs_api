@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Company\StoreImageRequest;
 use App\Models\Company;
 use App\Models\Image;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class CompanyImagesController extends Controller
@@ -22,10 +21,9 @@ class CompanyImagesController extends Controller
             $validated = $request->validated();
             $images = $validated['images'];
 
-
-            foreach ($images as $key=>$image ) {
-                $imageName = time() . '_' . $key . '.' . $image->extension();
-                $image->move(public_path('images/companies/'. $id), $imageName);
+            foreach ($images as $key => $image) {
+                $imageName = time().'_'.$key.'.'.$image->extension();
+                $image->move(public_path('images/companies/'.$id), $imageName);
 
                 $company->images()->save(
                     Image::create([
@@ -37,6 +35,7 @@ class CompanyImagesController extends Controller
         } else {
             $responseMessage = __('message.no_file_for_upload');
         }
+
         return response()->json(['message' => $responseMessage]);
     }
 
@@ -48,7 +47,8 @@ class CompanyImagesController extends Controller
         Gate::authorize('delete', $company);
 
         $image->delete();
-        unlink(public_path('images/companies/'. $image->company_id . '/' . $image->path));
+        unlink(public_path('images/companies/'.$image->company_id.'/'.$image->path));
+
         return response()->json(['message' => 'Image deleted']);
     }
 }

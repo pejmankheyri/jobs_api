@@ -42,7 +42,6 @@ class JobItemPolicy
             : Response::deny(__('message.you_not_own_this_job_item'));
     }
 
-
     /**
      * Determine whether the user can delete the model.
      */

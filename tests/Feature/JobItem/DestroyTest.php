@@ -2,12 +2,7 @@
 
 namespace Tests\Feature\JobItem;
 
-use App\Models\Company;
-use App\Models\JobItem;
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class DestroyTest extends TestCase
