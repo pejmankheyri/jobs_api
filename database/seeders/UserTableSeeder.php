@@ -22,6 +22,10 @@ class UserTableSeeder extends Seeder
         //     'email' => 'pejman@gmail.com',
         // ])->create();
 
+        // remove all files from storage
+        Storage::disk('public')->deleteDirectory('avatars');
+        Storage::disk('public')->deleteDirectory('cvs');
+
         $this->createUsers();
 
         // Create roles if they don't exist
@@ -29,9 +33,6 @@ class UserTableSeeder extends Seeder
         Role::firstOrCreate(['name' => 'user']);
         Role::firstOrCreate(['name' => 'company']);
 
-        // remove all files from storage
-        Storage::disk('public')->deleteDirectory('avatars');
-        Storage::disk('public')->deleteDirectory('cvs');
 
         // Create 10 users and assign roles
         User::factory($usersCount)->create()->each(function ($user) {
@@ -59,6 +60,7 @@ class UserTableSeeder extends Seeder
 
     private function createUsers()
     {
+        $avatarPath = $this->generateRandomFile('avatars', 'jpg', 'https://avatars.githubusercontent.com/u/3329008?v=4');
         $admin = User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
@@ -68,6 +70,10 @@ class UserTableSeeder extends Seeder
 
         $adminRole = Role::where('name', 'admin')->first();
         $admin->roles()->attach($adminRole);
+        // attach avatar to admin
+        $admin->update([
+            'avatar' => $avatarPath,
+        ]);
 
         $user = User::create([
             'name' => 'Applier User',
@@ -78,6 +84,9 @@ class UserTableSeeder extends Seeder
 
         $userRole = Role::where('name', 'user')->first();
         $user->roles()->attach($userRole);
+        $user->update([
+            'avatar' => $avatarPath,
+        ]);
 
         $company = User::create([
             'name' => 'Company User',
@@ -88,5 +97,8 @@ class UserTableSeeder extends Seeder
 
         $companyRole = Role::where('name', 'company')->first();
         $company->roles()->attach($companyRole);
+        $company->update([
+            'avatar' => $avatarPath,
+        ]);
     }
 }
