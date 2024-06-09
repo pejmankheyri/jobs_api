@@ -2,17 +2,11 @@
 
 namespace Tests\Feature\JobItem;
 
-use App\Models\Company;
-use App\Models\JobItem;
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ShowTest extends TestCase
 {
-
     use RefreshDatabase;
 
     /**
@@ -43,13 +37,13 @@ class ShowTest extends TestCase
                         'name',
                         'create_dates' => [
                             'created_at_human',
-                            'created_at'
+                            'created_at',
                         ],
                         'update_dates' => [
                             'updated_at_human',
-                            'updated_at'
-                        ]
-                    ]
+                            'updated_at',
+                        ],
+                    ],
                 ],
                 'company' => [
                     'id',
@@ -60,14 +54,14 @@ class ShowTest extends TestCase
                     'employes',
                     'create_dates' => [
                         'created_at_human',
-                        'created_at'
+                        'created_at',
                     ],
                     'update_dates' => [
                         'updated_at_human',
-                        'updated_at'
-                    ]
-                ]
-            ]
+                        'updated_at',
+                    ],
+                ],
+            ],
         ]);
     }
 
@@ -97,13 +91,13 @@ class ShowTest extends TestCase
                         'name',
                         'create_dates' => [
                             'created_at_human',
-                            'created_at'
+                            'created_at',
                         ],
                         'update_dates' => [
                             'updated_at_human',
-                            'updated_at'
-                        ]
-                    ]
+                            'updated_at',
+                        ],
+                    ],
                 ],
                 'company' => [
                     'id',
@@ -114,14 +108,14 @@ class ShowTest extends TestCase
                     'employes',
                     'create_dates' => [
                         'created_at_human',
-                        'created_at'
+                        'created_at',
                     ],
                     'update_dates' => [
                         'updated_at_human',
-                        'updated_at'
-                    ]
-                ]
-            ]
+                        'updated_at',
+                    ],
+                ],
+            ],
         ]);
     }
 }

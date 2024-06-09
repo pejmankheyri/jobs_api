@@ -14,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -72,7 +72,6 @@ class User extends Authenticatable
     {
         return $query->orderBy('id', 'desc')->paginate(10);
     }
-
 
     public function hasRole($roleName)
     {

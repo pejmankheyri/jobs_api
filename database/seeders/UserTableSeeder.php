@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +15,7 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $usersCount = max((int)$this->command->ask(__('message.how_many_users'), 10), 1);
+        $usersCount = max((int) $this->command->ask(__('message.how_many_users'), 10), 1);
 
         // $admin = User::factory()->state([
         //     'name' => 'Pejman',
@@ -34,7 +33,6 @@ class UserTableSeeder extends Seeder
         Storage::disk('public')->deleteDirectory('avatars');
         Storage::disk('public')->deleteDirectory('cvs');
 
-
         // Create 10 users and assign roles
         User::factory($usersCount)->create()->each(function ($user) {
             $user->roles()->attach(Role::where('name', 'company')->first());
@@ -49,16 +47,18 @@ class UserTableSeeder extends Seeder
         });
 
     }
+
     private function generateRandomFile($folder, $extension, $url)
     {
         // Create a dummy file in the specified folder and return the path
-        $fileName = uniqid() . '.' . $extension;
-        Storage::disk('public')->put($folder . '/' . $fileName, file_get_contents($url));
+        $fileName = uniqid().'.'.$extension;
+        Storage::disk('public')->put($folder.'/'.$fileName, file_get_contents($url));
 
-        return $folder . '/' . $fileName;
+        return $folder.'/'.$fileName;
     }
 
-    private function createUsers() {
+    private function createUsers()
+    {
         $admin = User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',

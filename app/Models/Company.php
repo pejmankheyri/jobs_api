@@ -69,8 +69,7 @@ class Company extends Model
 
             $company->tags()->detach();
 
-
-            $directory = public_path('images/companies/' . $company->id);
+            $directory = public_path('images/companies/'.$company->id);
             if (File::exists($directory)) {
                 File::deleteDirectory($directory);
             }

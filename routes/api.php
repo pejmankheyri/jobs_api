@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CompanyController;
 use App\Http\Controllers\Api\V1\CompanyImagesController;
 use App\Http\Controllers\Api\V1\CompanyTagController;
-use App\Http\Controllers\Api\V1\CvController;
 use App\Http\Controllers\Api\V1\JobItemController;
 use App\Http\Controllers\Api\V1\JobTagController;
 use App\Http\Controllers\Api\v1\SearchController;
@@ -64,5 +63,3 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     });
 
 });
-
-

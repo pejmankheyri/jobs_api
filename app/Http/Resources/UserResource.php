@@ -22,7 +22,7 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'avatar' => Storage::url($this->avatar),
             'cv' => Storage::url($this->cv),
-            'role' => $this->roles->first()->name ,
+            'role' => $this->roles->first()->name,
             'companies' => CompanyResource::collection($this->whenLoaded('company')),
         ];
     }

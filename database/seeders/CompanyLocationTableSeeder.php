@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Company;
 use App\Models\Location;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CompanyLocationTableSeeder extends Seeder
@@ -17,7 +16,7 @@ class CompanyLocationTableSeeder extends Seeder
         $companies = Company::all();
 
         $companies->each(function ($company) {
-            Location::factory(rand(1,3))->create([
+            Location::factory(rand(1, 3))->create([
                 'company_id' => $company->id,
             ]);
         });
