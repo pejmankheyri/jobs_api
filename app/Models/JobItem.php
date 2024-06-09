@@ -6,6 +6,7 @@ use App\Traits\Taggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class JobItem extends Model
 {
@@ -31,16 +32,12 @@ class JobItem extends Model
         return $this->belongsToMany(User::class, 'job_user')->withPivot('message')->withTimestamps();
     }
 
-
-    // public function scopeSearch(Builder $query, $search)
-    // {
-    //     return $query->where('title', 'like', '%' . $search . '%')
-    //         ->orWhere('description', 'like', '%' . $search . '%');
-    // }
-
-    public function scopeOrderByIdDesc(Builder $query)
+    public function scopeGetQueryWithRelations(Builder $query, $q)
     {
-        return $query->orderBy('id', 'desc')->paginate(10);
+        return $query->with(['tags', 'company','company.location'])
+            ->where('title', 'like', '%' . $q . '%')
+            ->orWhere('description', 'like', '%' . $q . '%')
+            ->orderBy('id', 'desc')->paginate(10);
     }
 
     protected static function boot()
@@ -49,6 +46,12 @@ class JobItem extends Model
 
         static::deleting(function ($jobItem) {
             $jobItem->tags()->detach();
+
+            Cache::forget('jobs');
+        });
+
+        static::updating(function ($jobItem) {
+            Cache::forget("jobs-{$jobItem->id}");
         });
     }
 }
