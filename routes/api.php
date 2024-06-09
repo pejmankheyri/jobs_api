@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\V1\CompanyImagesController;
 use App\Http\Controllers\Api\V1\CompanyTagController;
 use App\Http\Controllers\Api\V1\JobItemController;
 use App\Http\Controllers\Api\V1\JobTagController;
-use App\Http\Controllers\Api\v1\SearchController;
+use App\Http\Controllers\Api\V1\SearchController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
