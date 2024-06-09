@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             $this->command->info(__('message.database_refreshed'));
         }
 
-        // Cache::tags(['jobs'])->flush();
+        Cache::tags(['jobs'])->flush();
 
         $this->call([
             RoleTableSeeder::class,
