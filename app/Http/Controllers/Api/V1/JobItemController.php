@@ -25,7 +25,7 @@ class JobItemController extends Controller
         if ($request->q) {
             $jobs = JobItem::getQueryWithRelations($request->q);
         } else {
-            $jobs = Cache::remember('jobs', 60, function () use ($request) {
+            $jobs = Cache::tags(['jobs'])->remember('jobsList', 60, function () use ($request) {
                 return JobItem::getQueryWithRelations($request->q);
             });
         }
