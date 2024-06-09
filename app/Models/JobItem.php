@@ -40,6 +40,21 @@ class JobItem extends Model
             ->orderBy('id', 'desc')->paginate(10);
     }
 
+    public function scopeSearchJobs(Builder $query, $request)
+    {
+
+        if ($request->filled('q')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%'.$request->q.'%')
+                    ->orWhere('description', 'like', '%'.$request->q.'%');
+            });
+        }
+
+        $jobs = $query->with('company')->paginate($request->get('per_page', 5));
+
+        return $jobs;
+    }
+
     protected static function boot()
     {
         parent::boot();
