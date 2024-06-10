@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePassRequest;
 use App\Http\Requests\User\StoreAvatarRequest;
@@ -11,7 +12,6 @@ use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\JobItemResource;
 use App\Http\Resources\UserResource;
-use App\Jobs\NotifyUserAndAdminNewRegistration;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -59,7 +59,7 @@ class UserController extends Controller
             // save role
             $user->roles()->attach($validated['role_id']);
 
-            NotifyUserAndAdminNewRegistration::dispatch($user);
+            event(new UserRegistered($user));
 
             return new UserResource($user);
 
