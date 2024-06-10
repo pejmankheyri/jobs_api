@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\JobApplied;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobItem\ApplyRequest;
 use App\Http\Requests\JobItem\StoreRequest;
 use App\Http\Requests\JobItem\UpdateRequest;
 use App\Http\Resources\JobApplicantsResource;
 use App\Http\Resources\JobItemResource;
-use App\Jobs\NotifyUserAndCompanyJobApplied;
 use App\Models\JobItem;
 use App\Models\Tag;
 use Illuminate\Http\Request;
@@ -129,7 +129,7 @@ class JobItemController extends Controller
         // add message to the pivot table
         $job->users()->updateExistingPivot($user->id, ['message' => $validated['message']]);
 
-        NotifyUserAndCompanyJobApplied::dispatch($job, $user);
+        event(new JobApplied($job, $user));
 
         return response()->json(['message' => __('message.job_applied')], 200);
     }

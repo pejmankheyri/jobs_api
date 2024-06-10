@@ -6,7 +6,6 @@ use App\Traits\Taggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 
 class JobItem extends Model
 {
@@ -53,20 +52,5 @@ class JobItem extends Model
         $jobs = $query->with('company')->paginate($request->get('per_page', 5));
 
         return $jobs;
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::deleting(function ($jobItem) {
-            $jobItem->tags()->detach();
-
-            Cache::forget('jobs');
-        });
-
-        static::updating(function ($jobItem) {
-            Cache::forget("jobs-{$jobItem->id}");
-        });
     }
 }
