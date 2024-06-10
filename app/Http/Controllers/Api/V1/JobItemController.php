@@ -8,6 +8,7 @@ use App\Http\Requests\JobItem\StoreRequest;
 use App\Http\Requests\JobItem\UpdateRequest;
 use App\Http\Resources\JobApplicantsResource;
 use App\Http\Resources\JobItemResource;
+use App\Jobs\NotifyUserAndCompanyJobApplied;
 use App\Models\JobItem;
 use App\Models\Tag;
 use Illuminate\Http\Request;
@@ -108,6 +109,7 @@ class JobItemController extends Controller
 
     public function apply(ApplyRequest $request, $jobId)
     {
+
         // Authenticate the user
         $user = Auth::user();
         // Find the job
@@ -126,6 +128,8 @@ class JobItemController extends Controller
         $job->users()->attach($user->id);
         // add message to the pivot table
         $job->users()->updateExistingPivot($user->id, ['message' => $validated['message']]);
+
+        NotifyUserAndCompanyJobApplied::dispatch($job, $user);
 
         return response()->json(['message' => __('message.job_applied')], 200);
     }
