@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Storage;
 
 class UserTableSeeder extends Seeder
 {
+    public $avatarSample = 'https://avatars.githubusercontent.com/u/3329008?v=4';
+
+    public $cvSample = 'https://www.sbs.ox.ac.uk/sites/default/files/2019-01/cv-template.pdf';
+
     /**
      * Run the database seeds.
      */
@@ -33,13 +37,12 @@ class UserTableSeeder extends Seeder
         Role::firstOrCreate(['name' => 'user']);
         Role::firstOrCreate(['name' => 'company']);
 
-
         // Create 10 users and assign roles
         User::factory($usersCount)->create()->each(function ($user) {
             $user->roles()->attach(Role::where('name', 'company')->first());
 
-            $avatarPath = $this->generateRandomFile('avatars', 'jpg', 'https://avatars.githubusercontent.com/u/3329008?v=4');
-            $cvPath = $this->generateRandomFile('cvs', 'pdf', 'https://www.sbs.ox.ac.uk/sites/default/files/2019-01/cv-template.pdf');
+            $avatarPath = $this->generateRandomFile('avatars', 'jpg', $this->avatarSample);
+            $cvPath = $this->generateRandomFile('cvs', 'pdf', $this->cvSample);
 
             $user->update([
                 'avatar' => $avatarPath,
@@ -60,7 +63,7 @@ class UserTableSeeder extends Seeder
 
     private function createUsers()
     {
-        $avatarPath = $this->generateRandomFile('avatars', 'jpg', 'https://avatars.githubusercontent.com/u/3329008?v=4');
+        $avatarPath = $this->generateRandomFile('avatars', 'jpg', $this->avatarSample);
         $admin = User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',

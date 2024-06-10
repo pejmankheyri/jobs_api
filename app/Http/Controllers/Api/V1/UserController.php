@@ -11,6 +11,7 @@ use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\JobItemResource;
 use App\Http\Resources\UserResource;
+use App\Jobs\NotifyUserAndAdminNewRegistration;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -57,6 +58,8 @@ class UserController extends Controller
 
             // save role
             $user->roles()->attach($validated['role_id']);
+
+            NotifyUserAndAdminNewRegistration::dispatch($user);
 
             return new UserResource($user);
 
