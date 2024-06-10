@@ -12,6 +12,6 @@ class NotifyUsersAboutRegistration
      */
     public function handle(UserRegistered $event): void
     {
-        NotifyUserAndAdminNewRegistration::dispatch($event->user);
+        NotifyUserAndAdminNewRegistration::dispatch($event->user, $event->admin);
     }
 }

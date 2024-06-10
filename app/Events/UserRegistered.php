@@ -13,11 +13,14 @@ class UserRegistered
 
     public User $user;
 
+    public User $admin;
+
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user)
+    public function __construct(User $user, User $admin)
     {
         $this->user = $user;
+        $this->admin = $admin;
     }
 }
