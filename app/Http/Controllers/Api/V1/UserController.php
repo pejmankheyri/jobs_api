@@ -59,7 +59,9 @@ class UserController extends Controller
             // save role
             $user->roles()->attach($validated['role_id']);
 
-            event(new UserRegistered($user));
+            $admin = Role::where('name', 'admin')->first()->users->first();
+
+            event(new UserRegistered($user, $admin));
 
             return new UserResource($user);
 
