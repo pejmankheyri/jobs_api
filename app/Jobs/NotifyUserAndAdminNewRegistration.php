@@ -34,9 +34,9 @@ class NotifyUserAndAdminNewRegistration implements ShouldQueue
 
         ThrottledMail::dispatch(new UserRegisteredForUser($user), $user);
 
-        $admin = Role::where('name', 'admin')->first()->users->first();
-
-        ThrottledMail::dispatch(new UserRegisteredForAdmin($user), $admin);
+        // $admin = Role::where('name', 'admin')->first()->users->first();
+        // dd($admin);
+        // ThrottledMail::dispatch(new UserRegisteredForAdmin($user), $admin);
 
     }
 }
