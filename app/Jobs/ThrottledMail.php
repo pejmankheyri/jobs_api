@@ -2,26 +2,30 @@
 
 namespace App\Jobs;
 
-use App\Mail\UserRegisteredForAdmin;
-use App\Mail\UserRegisteredForUser;
-use App\Models\Role;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Mail\Mailable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redis;
 
-class NotifyUserAndAdminNewRegistration implements ShouldQueue
+class ThrottledMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public $mail;
 
     public $user;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($user)
+    public function __construct(Mailable $mail, User $user)
     {
+        $this->mail = $mail;
         $this->user = $user;
     }
 
@@ -30,13 +34,10 @@ class NotifyUserAndAdminNewRegistration implements ShouldQueue
      */
     public function handle(): void
     {
-        $user = $this->user;
-
-        ThrottledMail::dispatch(new UserRegisteredForUser($user), $user);
-
-        $admin = Role::where('name', 'admin')->first()->users->first();
-
-        ThrottledMail::dispatch(new UserRegisteredForAdmin($user), $admin);
-
+        Redis::throttle('mailtrap')->allow(2)->every(12)->then(function () {
+            Mail::to($this->user)->send($this->mail);
+        }, function () {
+            return $this->release(5);
+        });
     }
 }

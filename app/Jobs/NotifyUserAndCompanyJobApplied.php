@@ -37,10 +37,14 @@ class NotifyUserAndCompanyJobApplied implements ShouldQueue
         $company = $this->jobItem->company;
 
         // Notify the user
-        Mail::to($user->email)->send(new JobAppliedForUser($this->jobItem, $user));
+        // Mail::to($user->email)->send(new JobAppliedForUser($this->jobItem, $user));
+
+        ThrottledMail::dispatch(new JobAppliedForUser($this->jobItem, $user), $user);
 
         // Notify the company
-        Mail::to($company->user->email)->send(new JobAppliedForCompany($this->jobItem, $user));
+        // Mail::to($company->user->email)->send(new JobAppliedForCompany($this->jobItem, $user));
+
+        ThrottledMail::dispatch(new JobAppliedForCompany($this->jobItem, $user), $company->user);
 
     }
 }
