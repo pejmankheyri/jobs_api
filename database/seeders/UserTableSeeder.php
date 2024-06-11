@@ -64,6 +64,7 @@ class UserTableSeeder extends Seeder
     private function createUsers()
     {
         $avatarPath = $this->generateRandomFile('avatars', 'jpg', $this->avatarSample);
+        $cvPath = $this->generateRandomFile('cvs', 'pdf', $this->cvSample);
         $admin = User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
@@ -76,6 +77,7 @@ class UserTableSeeder extends Seeder
         // attach avatar to admin
         $admin->update([
             'avatar' => $avatarPath,
+            'cv' => $cvPath
         ]);
 
         $user = User::create([
@@ -89,6 +91,7 @@ class UserTableSeeder extends Seeder
         $user->roles()->attach($userRole);
         $user->update([
             'avatar' => $avatarPath,
+            'cv' => $cvPath
         ]);
 
         $company = User::create([
@@ -102,6 +105,7 @@ class UserTableSeeder extends Seeder
         $company->roles()->attach($companyRole);
         $company->update([
             'avatar' => $avatarPath,
+            'cv' => $cvPath
         ]);
     }
 }

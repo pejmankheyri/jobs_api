@@ -103,9 +103,9 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request)
     {
-        $user = User::findOrFail($id);
+        $user = Auth::user();
 
         if (Auth::user()->roles->first()->name !== 'admin') {
             Gate::authorize('update', $user);
