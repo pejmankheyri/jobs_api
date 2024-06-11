@@ -77,7 +77,7 @@ class UserTableSeeder extends Seeder
         // attach avatar to admin
         $admin->update([
             'avatar' => $avatarPath,
-            'cv' => $cvPath
+            'cv' => $cvPath,
         ]);
 
         $user = User::create([
@@ -91,7 +91,7 @@ class UserTableSeeder extends Seeder
         $user->roles()->attach($userRole);
         $user->update([
             'avatar' => $avatarPath,
-            'cv' => $cvPath
+            'cv' => $cvPath,
         ]);
 
         $company = User::create([
@@ -105,7 +105,7 @@ class UserTableSeeder extends Seeder
         $company->roles()->attach($companyRole);
         $company->update([
             'avatar' => $avatarPath,
-            'cv' => $cvPath
+            'cv' => $cvPath,
         ]);
     }
 }

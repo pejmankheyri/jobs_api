@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePassRequest;
 use App\Http\Requests\User\StoreAvatarRequest;
 use App\Http\Requests\User\StoreCvRequest;
-use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\JobItemResource;
 use App\Http\Resources\UserResource;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,40 +33,6 @@ class UserController extends Controller
         $users = User::orderByIdDesc();
 
         return UserResource::collection($users);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreRequest $request)
-    {
-        $validated = $request->validated();
-
-        $IsNotAdmin = Role::findOrFail($validated['role_id'])->name !== 'admin';
-
-        if ($IsNotAdmin) {
-            $user = new User();
-            $user->name = $validated['name'];
-            $user->email = $validated['email'];
-            $user->phone = $validated['phone'];
-            $user->password = $validated['password'];
-
-            $user->save();
-
-            // save role
-            $user->roles()->attach($validated['role_id']);
-
-            $admin = Role::where('name', 'admin')->first()->users->first();
-
-            event(new UserRegistered($user, $admin));
-
-            return new UserResource($user);
-
-        } else {
-            return response()->json([
-                'message' => __('message.role_not_found'),
-            ], 404);
-        }
     }
 
     /**
