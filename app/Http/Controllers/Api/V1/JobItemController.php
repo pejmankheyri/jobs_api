@@ -24,10 +24,10 @@ class JobItemController extends Controller
     public function index(Request $request)
     {
         if ($request->q) {
-            $jobs = JobItem::getQueryWithRelations($request->q);
+            $jobs = JobItem::getQueryWithRelations($request);
         } else {
             $jobs = Cache::tags(['jobs'])->remember('jobsList', 60, function () use ($request) {
-                return JobItem::getQueryWithRelations($request->q);
+                return JobItem::getQueryWithRelations($request);
             });
         }
 

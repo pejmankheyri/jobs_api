@@ -31,18 +31,44 @@ class JobItem extends Model
         return $this->belongsToMany(User::class, 'job_user')->withPivot('message')->withTimestamps();
     }
 
-    public function scopeGetQueryWithRelations(Builder $query, $q)
+    public function scopeGetQueryWithRelations(Builder $query, $request)
     {
-        return $query->with([
+        $query->with([
             'tags',
             'company',
             'company.location',
             'company.tags',
             'company.user',
-        ])
-            ->where('title', 'like', '%'.$q.'%')
-            ->orWhere('description', 'like', '%'.$q.'%')
-            ->orderBy('id', 'desc')->paginate(10);
+        ]);
+
+        // Add job title and description search conditions
+        $query->where(function ($query) use ($request) {
+            $query->where('title', 'like', '%' . $request->q . '%')
+                  ->orWhere('description', 'like', '%' . $request->q . '%');
+        });
+
+        // Add location search conditions if 'location' parameter is provided
+        if (!empty($request->location)) {
+            $locations = explode(',', $request->location);
+            $country = $locations[0] ?? null;
+            $state = $locations[1] ?? null;
+            $city = $locations[2] ?? null;
+
+            $query->orWhereHas('company.location', function ($query) use ($country, $state, $city) {
+                if ($country) {
+                    $query->where('country', 'like', '%' . $country . '%');
+                }
+                if ($state) {
+                    $query->where('state', 'like', '%' . $state . '%');
+                }
+                if ($city) {
+                    $query->where('city', 'like', '%' . $city . '%');
+                }
+            });
+        }
+
+        // Order by ID in descending order and paginate
+        return $query->orderBy('id', 'desc')->paginate(10);
     }
 
     public function scopeSearchJobs(Builder $query, $request)
