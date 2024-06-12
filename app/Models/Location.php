@@ -37,7 +37,7 @@ class Location extends Model
             });
         }
 
-        $locations = $query->paginate($request->get('per_page', 10));
+        $locations = $query->paginate($request->get('per_page', 5));
 
         return $locations;
     }
