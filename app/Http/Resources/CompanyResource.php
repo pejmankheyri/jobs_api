@@ -35,6 +35,7 @@ class CompanyResource extends JsonResource
             'tags' => TagResource::collection($this->whenLoaded('tags')),
             'location' => LocationResource::collection($this->whenLoaded('location')),
             'jobs' => JobItemResource::collection($this->whenLoaded('jobItem')),
+            'images' => ImageResource::collection($this->whenLoaded('images')),
         ];
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\Company\StoreImageRequest;
 use App\Models\Company;
 use App\Models\Image;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyImagesController extends Controller
 {
@@ -16,18 +17,19 @@ class CompanyImagesController extends Controller
 
             $company = Company::find($id);
 
-            Gate::authorize('update', $company);
+            // Gate::authorize('update', $company);
 
             $validated = $request->validated();
             $images = $validated['images'];
 
             foreach ($images as $key => $image) {
                 $imageName = time().'_'.$key.'.'.$image->extension();
-                $image->move(public_path('images/companies/'.$id), $imageName);
+
+                $path = $image->storeAs('images/', $imageName, 'public');
 
                 $company->images()->save(
                     Image::create([
-                        'path' => $imageName,
+                        'path' => 'images/'.$imageName,
                     ])
                 );
             }
@@ -44,10 +46,10 @@ class CompanyImagesController extends Controller
         $image = Image::find($id);
         $company = Company::find($image->company_id);
 
-        Gate::authorize('delete', $company);
+        // Gate::authorize('deleteImage', $company);
 
         $image->delete();
-        unlink(public_path('images/companies/'.$image->company_id.'/'.$image->path));
+        Storage::disk('public')->delete($image->path);
 
         return response()->json(['message' => 'Image deleted']);
     }

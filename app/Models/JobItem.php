@@ -39,16 +39,17 @@ class JobItem extends Model
             'company.location',
             'company.tags',
             'company.user',
+            'company.images',
         ]);
 
         // Add job title and description search conditions
         $query->where(function ($query) use ($request) {
-            $query->where('title', 'like', '%' . $request->q . '%')
-                  ->orWhere('description', 'like', '%' . $request->q . '%');
+            $query->where('title', 'like', '%'.$request->q.'%')
+                ->orWhere('description', 'like', '%'.$request->q.'%');
         });
 
         // Add location search conditions if 'location' parameter is provided
-        if (!empty($request->location)) {
+        if (! empty($request->location)) {
             $locations = explode(',', $request->location);
             $country = $locations[0] ?? null;
             $state = $locations[1] ?? null;
@@ -56,13 +57,13 @@ class JobItem extends Model
 
             $query->orWhereHas('company.location', function ($query) use ($country, $state, $city) {
                 if ($country) {
-                    $query->where('country', 'like', '%' . $country . '%');
+                    $query->where('country', 'like', '%'.$country.'%');
                 }
                 if ($state) {
-                    $query->where('state', 'like', '%' . $state . '%');
+                    $query->where('state', 'like', '%'.$state.'%');
                 }
                 if ($city) {
-                    $query->where('city', 'like', '%' . $city . '%');
+                    $query->where('city', 'like', '%'.$city.'%');
                 }
             });
         }

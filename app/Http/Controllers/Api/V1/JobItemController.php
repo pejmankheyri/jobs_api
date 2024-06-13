@@ -60,7 +60,7 @@ class JobItemController extends Controller
     public function show($id)
     {
         $jobItem = Cache::remember("job-{$id}", 60, function () use ($id) {
-            return JobItem::with(['tags', 'company'])->findOrFail($id);
+            return JobItem::with(['tags', 'company', 'company.location', 'company.images'])->findOrFail($id);
         });
 
         return new JobItemResource($jobItem);

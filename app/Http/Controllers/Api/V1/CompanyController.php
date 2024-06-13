@@ -49,7 +49,14 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        $company = Company::with(['location', 'tags', 'user', 'jobItem'])->findOrFail($id);
+        $company = Company::with([
+            'location',
+            'tags',
+            'user',
+            'jobItem',
+            'images',
+        ])
+            ->findOrFail($id);
 
         return new CompanyResource($company);
     }
