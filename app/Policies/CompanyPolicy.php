@@ -77,4 +77,11 @@ class CompanyPolicy
             ? Response::allow()
             : Response::deny(__('message.you_not_own_this_company'));
     }
+
+    public function deleteImage(User $user, Company $company): Response
+    {
+        return $user->id === $company->user_id
+            ? Response::allow()
+            : Response::deny(__('message.you_not_own_this_company'));
+    }
 }
