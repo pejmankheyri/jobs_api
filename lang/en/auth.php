@@ -17,5 +17,10 @@ return [
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
     'logged_out' => 'You have been logged out.',
-
+    'reset_password' => 'Password reset successfully.',
+    'reset_password_link_sent' => 'Password reset link sent.',
+    'invalid_token_or_email' => 'Invalid token or email.',
+    'no_user_found_with_email' => 'No user found with this email.',
+    'password_changed_successfully' => 'Password changed successfully.',
+    'reset_password_success' => 'Password reset successfully.',
 ];

@@ -17,5 +17,10 @@ return [
     'password' => 'Das eingegebene Passwort ist falsch.',
     'throttle' => 'Zu viele Anmeldeversuche. Bitte versuchen Sie es in :seconds Sekunden erneut.',
     'logged_out' => 'Sie wurden abgemeldet.',
-
+    'reset_password' => 'Passwort erfolgreich zurückgesetzt.',
+    'reset_password_link_sent' => 'Passwort zurücksetzen Link gesendet.',
+    'invalid_token_or_email' => 'Ungültiger Token oder E-Mail.',
+    'no_user_found_with_email' => 'Kein Benutzer mit dieser E-Mail gefunden.',
+    'password_changed_successfully' => 'Passwort erfolgreich geändert.',
+    'reset_password_success' => 'Passwort erfolgreich zurückgesetzt.',
 ];
