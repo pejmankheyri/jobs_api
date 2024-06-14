@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\ChangePassRequest;
-use App\Http\Requests\User\StoreAvatarRequest;
-use App\Http\Requests\User\StoreCvRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\JobItemResource;
@@ -14,9 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -106,25 +101,7 @@ class UserController extends Controller
         $user = Auth::user();
         Gate::authorize('jobs', $user);
 
-        $perPage = $request->query('per_page', 10);
-
-        $sort = $request->query('sort', 'id');
-        $order = $request->query('order', 'desc');
-        $search = $request->query('q', '');
-
-        if (! in_array($order, ['asc', 'desc'])) {
-            return response()->json(['message' => 'Invalid sort parameter'], 400);
-        }
-
-        $jobs = $user->jobs()
-            ->when($search, function ($query, $search) {
-                return $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', '%'.$search.'%')
-                        ->orWhere('description', 'like', '%'.$search.'%');
-                });
-            })
-            ->orderBy($sort, $order)
-            ->paginate($perPage);
+        $jobs = User::appledJobs($request);
 
         return JobItemResource::collection($jobs);
     }
@@ -134,110 +111,8 @@ class UserController extends Controller
         $user = Auth::user();
         Gate::authorize('companies', $user);
 
-        $perPage = $request->query('per_page', 10);
-
-        $sort = $request->query('sort', 'id');
-        $order = $request->query('order', 'desc');
-        $search = $request->query('q', '');
-
-        if (! in_array($order, ['asc', 'desc'])) {
-            return response()->json(['message' => 'Invalid sort parameter'], 400);
-        }
-
-        $companies = $user->companies()
-            ->when($search, function ($query, $search) {
-                return $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', '%'.$search.'%')
-                        ->orWhere('description', 'like', '%'.$search.'%');
-                });
-            })
-            ->with(['location', 'tags', 'jobItem'])
-            ->orderBy($sort, $order)
-            ->paginate($perPage);
+        $companies = User::appledCompanies($request);
 
         return CompanyResource::collection($companies);
-    }
-
-    public function uploadAvatar(StoreAvatarRequest $request)
-    {
-        $validated = $request->validated();
-
-        $user = Auth::user();
-
-        Gate::authorize('uploadAvatar', $user);
-
-        // Handle the user upload of avatar
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $filename = time().'.'.$avatar->getClientOriginalExtension();
-            $path = $avatar->storeAs('avatars', $filename, 'public');
-
-            // Delete old avatar if exists
-            if ($user->avatar) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-
-            // Update user's avatar path
-            $user->avatar = $path;
-            $user->save();
-        }
-
-        return response()->json(['message' => 'Avatar uploaded successfully', 'avatar' => Storage::url($user->avatar)], 200);
-    }
-
-    public function getAvatar($id)
-    {
-        $user = User::findOrFail($id);
-
-        if (! $user->avatar) {
-            return response()->json(['message' => 'No avatar found'], 404);
-        }
-
-        return response()->json(['avatar' => Storage::url($user->avatar)], 200);
-    }
-
-    public function changePassword(ChangePassRequest $request)
-    {
-        $validated = $request->validated();
-
-        $user = $request->user();
-
-        Gate::authorize('changePass', $user);
-
-        if (! Hash::check($validated['current_password'], $user->password)) {
-            throw ValidationException::withMessages([
-                'current_password' => ['The provided password does not match your current password.'],
-            ]);
-        }
-
-        $user->password = Hash::make($request['new_password']);
-        $user->save();
-
-        return response()->json(['message' => 'Password changed successfully']);
-    }
-
-    public function uploadCV(StoreCvRequest $request)
-    {
-        $validated = $request->validated();
-        $user = Auth::user();
-
-        Gate::authorize('uploadCV', $user);
-
-        if ($request->hasFile('cv')) {
-            $cv = $request->file('cv');
-            $filename = time().'.'.$cv->getClientOriginalExtension();
-            $path = $cv->storeAs('cvs', $filename, 'public');
-
-            // Delete old cv if exists
-            if ($user->cv) {
-                Storage::disk('public')->delete($user->cv);
-            }
-
-            // Update user's cv path
-            $user->cv = $path;
-            $user->save();
-        }
-
-        return response()->json(['message' => 'CV uploaded successfully', 'cv' => Storage::url($user->cv)], 200);
     }
 }

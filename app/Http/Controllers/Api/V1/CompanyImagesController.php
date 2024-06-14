@@ -25,11 +25,11 @@ class CompanyImagesController extends Controller
             foreach ($images as $key => $image) {
                 $imageName = time().'_'.$key.'.'.$image->extension();
 
-                $path = $image->storeAs('images/', $imageName, 'public');
+                $image->storeAs('images/company/'.$id, $imageName, 'public');
 
                 $company->images()->save(
                     Image::create([
-                        'path' => 'images/'.$imageName,
+                        'path' => 'images/company/'.$id.'/'.$imageName,
                     ])
                 );
             }

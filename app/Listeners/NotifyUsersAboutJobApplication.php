@@ -12,7 +12,7 @@ class NotifyUsersAboutJobApplication
      */
     public function handle(JobApplied $event): void
     {
-        NotifyUserAndCompanyJobApplied::dispatch($event->jobItem, $event->user);
+        NotifyUserAndCompanyJobApplied::dispatch($event->jobItem, $event->user, $event->message);
 
     }
 }

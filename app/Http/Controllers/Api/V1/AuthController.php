@@ -8,11 +8,13 @@ use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Http\Requests\User\ChangePassRequest;
 use App\Http\Requests\User\StoreRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -99,5 +101,25 @@ class AuthController extends Controller
         event(new PasswordReset($email, $password, $token));
 
         return response()->json(['message' => __('auth.password_changed_successfully')], 200);
+    }
+
+    public function changePassword(ChangePassRequest $request)
+    {
+        $validated = $request->validated();
+
+        $user = $request->user();
+
+        Gate::authorize('changePass', $user);
+
+        if (! Hash::check($validated['current_password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['The provided password does not match your current password.'],
+            ]);
+        }
+
+        $user->password = Hash::make($request['new_password']);
+        $user->save();
+
+        return response()->json(['message' => 'Password changed successfully']);
     }
 }

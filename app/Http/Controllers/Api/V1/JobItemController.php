@@ -109,27 +109,16 @@ class JobItemController extends Controller
 
     public function apply(ApplyRequest $request, $jobId)
     {
-
-        // Authenticate the user
         $user = Auth::user();
-        // Find the job
+
         $job = JobItem::findOrFail($jobId);
 
         Gate::authorize('apply', $job);
 
         $validated = $request->validated();
+        $message = $validated['message'];
 
-        // Check if the user has already applied
-        if ($job->users()->where('user_id', $user->id)->exists()) {
-            return response()->json(['message' => __('message.already_applied')], 400);
-        }
-
-        // Attach the user to the job
-        $job->users()->attach($user->id);
-        // add message to the pivot table
-        $job->users()->updateExistingPivot($user->id, ['message' => $validated['message']]);
-
-        event(new JobApplied($job, $user));
+        event(new JobApplied($job, $user, $message));
 
         return response()->json(['message' => __('message.job_applied')], 200);
     }

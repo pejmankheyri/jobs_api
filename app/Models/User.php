@@ -73,6 +73,61 @@ class User extends Authenticatable
         return $query->orderBy('id', 'desc')->paginate(10);
     }
 
+    public function scopeAppledJobs(Builder $query, $request)
+    {
+        $user = Auth::user();
+
+        $perPage = $request->query('per_page', 10);
+
+        $sort = $request->query('sort', 'id');
+        $order = $request->query('order', 'desc');
+        $search = $request->query('q', '');
+
+        if (! in_array($order, ['asc', 'desc'])) {
+            return response()->json(['message' => 'Invalid sort parameter'], 400);
+        }
+
+        $output = $user->jobs()
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', '%'.$search.'%')
+                        ->orWhere('description', 'like', '%'.$search.'%');
+                });
+            })
+            ->orderBy($sort, $order)
+            ->paginate($perPage);
+
+        return $output;
+    }
+
+    public function scopeCompanies(Builder $query, $request)
+    {
+        $user = Auth::user();
+
+        $perPage = $request->query('per_page', 10);
+
+        $sort = $request->query('sort', 'id');
+        $order = $request->query('order', 'desc');
+        $search = $request->query('q', '');
+
+        if (! in_array($order, ['asc', 'desc'])) {
+            return response()->json(['message' => 'Invalid sort parameter'], 400);
+        }
+
+        $output = $user->companies()
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', '%'.$search.'%')
+                        ->orWhere('description', 'like', '%'.$search.'%');
+                });
+            })
+            ->with(['location', 'tags', 'jobItem'])
+            ->orderBy($sort, $order)
+            ->paginate($perPage);
+
+        return $output;
+    }
+
     public function hasRole($roleName)
     {
         return $this->roles()->where('name', $roleName)->exists();

@@ -14,12 +14,15 @@ class JobApplied
 
     public $user;
 
+    public $message;
+
     /**
      * Create a new event instance.
      */
-    public function __construct($jobItem, $user)
+    public function __construct($jobItem, $user, $message)
     {
         $this->jobItem = $jobItem;
         $this->user = $user;
+        $this->message = $message;
     }
 }
