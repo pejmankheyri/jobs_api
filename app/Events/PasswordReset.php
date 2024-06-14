@@ -6,23 +6,23 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class JobApplied
+class PasswordReset
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $jobItem;
+    public $email;
 
-    public $user;
+    public $password;
 
-    public $message;
+    public $token;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($jobItem, $user, $message)
+    public function __construct($email, $password, $token)
     {
-        $this->jobItem = $jobItem;
-        $this->user = $user;
-        $this->message = $message;
+        $this->email = $email;
+        $this->password = $password;
+        $this->token = $token;
     }
 }

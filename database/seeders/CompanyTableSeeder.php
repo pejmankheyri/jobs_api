@@ -20,22 +20,23 @@ class CompanyTableSeeder extends Seeder
         $users = User::all();
 
         Storage::disk('public')->deleteDirectory('logos');
+        Storage::disk('public')->deleteDirectory('images');
 
-        Company::factory($companyCount)->make()->each(function ($comapny) use ($users) {
-            $comapny->user_id = $users->random()->id;
-            $comapny->save();
+        Company::factory($companyCount)->make()->each(function ($company) use ($users) {
+            $company->user_id = $users->random()->id;
+            $company->save();
 
             $logoPath = $this->generateRandomFile('logos', 'jpg', $this->image);
 
-            $comapny->update([
+            $company->update([
                 'logo' => $logoPath,
             ]);
 
-            $comapny->images()->create([
-                'path' => $this->generateRandomFile('images', 'jpg', $this->image),
+            $company->images()->create([
+                'path' => $this->generateRandomFile('images/company/'.$company->id, 'jpg', $this->image),
             ]);
-            $comapny->images()->create([
-                'path' => $this->generateRandomFile('images', 'jpg', $this->image),
+            $company->images()->create([
+                'path' => $this->generateRandomFile('images/company/'.$company->id, 'jpg', $this->image),
             ]);
         });
     }

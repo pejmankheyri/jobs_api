@@ -7,7 +7,9 @@ use App\Http\Controllers\Api\V1\CompanyTagController;
 use App\Http\Controllers\Api\V1\JobItemController;
 use App\Http\Controllers\Api\V1\JobTagController;
 use App\Http\Controllers\Api\V1\SearchController;
+use App\Http\Controllers\Api\V1\UserAvatarController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\UserCvController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('api.v1.')->group(function () {
@@ -16,6 +18,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('forgot-password');
     Route::post('/reset-password', [AuthController::class, 'reset'])->name('reset-password');
+    Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change-password')->middleware('auth:sanctum');
 
     // USERS
     Route::prefix('users')->name('users.')->group(function () {
@@ -25,10 +28,9 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy')->middleware('auth:sanctum', 'role:admin');
         Route::get('/jobs', [UserController::class, 'jobs'])->name('jobs')->middleware('auth:sanctum');
         Route::get('/companies', [UserController::class, 'companies'])->name('companies')->middleware('auth:sanctum');
-        Route::post('/avatar', [UserController::class, 'uploadAvatar'])->name('upload-avatar')->middleware('auth:sanctum');
-        Route::get('/{id}/avatar', [UserController::class, 'getAvatar'])->name('avatar')->middleware('auth:sanctum');
-        Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password')->middleware('auth:sanctum');
-        Route::post('/cv', [UserController::class, 'uploadCV'])->name('cv')->middleware('auth:sanctum');
+        Route::post('/avatar', [UserAvatarController::class, 'uploadAvatar'])->name('upload-avatar')->middleware('auth:sanctum');
+        Route::get('/{id}/avatar', [UserAvatarController::class, 'getAvatar'])->name('avatar')->middleware('auth:sanctum');
+        Route::post('/cv', [UserCvController::class, 'uploadCV'])->name('cv')->middleware('auth:sanctum');
     });
 
     // JOBS
