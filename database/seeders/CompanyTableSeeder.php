@@ -9,7 +9,24 @@ use Illuminate\Support\Facades\Storage;
 
 class CompanyTableSeeder extends Seeder
 {
-    public $image = 'https://banner2.cleanpng.com/20180423/gkw/kisspng-google-logo-logo-logo-5ade7dc753b015.9317679115245306313428.jpg';
+    public $images = [
+        'https://images.pexels.com/photos/380768/pexels-photo-380768.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        'https://images.pexels.com/photos/245240/pexels-photo-245240.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        'https://images.pexels.com/photos/380769/pexels-photo-380769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        'https://images.pexels.com/photos/37347/office-sitting-room-executive-sitting.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        'https://images.pexels.com/photos/1595385/pexels-photo-1595385.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        'https://images.pexels.com/photos/936722/pexels-photo-936722.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        'https://images.pexels.com/photos/3184357/pexels-photo-3184357.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    ];
+
+    public $logos = [
+        'https://www.zarla.com/images/apple-logo-2400x2400-20220512-1.png',
+        'https://www.zarla.com/images/twitter-logo-2400x2400-20220512.png',
+        'https://www.zarla.com/images/facebook-logo-2400x2400-20220518-2.png',
+        'https://www.zarla.com/images/fedex-logo-2400x2400-20223105.png',
+        'https://www.zarla.com/images/coca-cola-logo-2400x2400-20220513.png',
+        'https://www.zarla.com/images/mcdonalds-logo-2400x2400-20220513-1.png',
+    ];
 
     /**
      * Run the database seeds.
@@ -26,18 +43,18 @@ class CompanyTableSeeder extends Seeder
             $company->user_id = $users->random()->id;
             $company->save();
 
-            $logoPath = $this->generateRandomFile('logos', 'jpg', $this->image);
+            $logoPath = $this->generateRandomFile('logos', 'jpg', $this->logos[array_rand($this->logos)]);
 
             $company->update([
                 'logo' => $logoPath,
             ]);
 
-            $company->images()->create([
-                'path' => $this->generateRandomFile('images/company/'.$company->id, 'jpg', $this->image),
-            ]);
-            $company->images()->create([
-                'path' => $this->generateRandomFile('images/company/'.$company->id, 'jpg', $this->image),
-            ]);
+            for ($i = 0; $i < 3; $i++) {
+                $company->images()->create([
+                    'path' => $this->generateRandomFile('images/company/'.$company->id, 'jpg', $this->images[array_rand($this->images)]),
+                ]);
+            }
+
         });
     }
 
