@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class JobItemFactory extends Factory
 {
-
     public $exampleITJobTitles = [
         'Software Engineer',
         'Frontend Developer',

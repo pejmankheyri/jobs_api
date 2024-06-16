@@ -119,6 +119,7 @@ class CompanyFactory extends Factory
         'We are a dynamic and innovative company that is changing the world. Our team is made up of the most talented and dedicated professionals in the world. We are committed to excellence and innovation, and we are always looking for new ways to improve our products and services. If you are looking for a challenging and rewarding career, we would love to hear from you!',
         'Our company is a leader in the industry. We are dedicated to providing the best products and services to our customers. Our team is made up of the most talented and dedicated professionals in the world. We are committed to excellence and innovation, and we are always looking for new ways to improve our products and services. If you are looking for a challenging and rewarding career, we would love to hear from you!',
     ];
+
     /**
      * Define the model's default state.
      *

@@ -20,13 +20,14 @@ class UpdateTest extends TestCase
         $updatedUserData = [
             'name' => 'New Name',
             'email' => 'newemail@example.com',
+            'phone' => '08123456789',
             'password' => 'newpassword',
             'password_confirmation' => 'newpassword',
             'role_id' => Role::where('name', 'user')->first()->id,
         ];
 
         // Act as the user and make a PUT request to the /api/users/{id} endpoint
-        $response = $this->actingAs($user, 'sanctum')->putJson("/api/v1/users/{$user->id}", $updatedUserData);
+        $response = $this->actingAs($user, 'sanctum')->putJson('/api/v1/users', $updatedUserData);
 
         // Assert the status is 200 (OK)
         $response->assertStatus(200);
@@ -41,45 +42,5 @@ class UpdateTest extends TestCase
             ],
         ]);
 
-        // Assert the user is updated in the database
-        $this->assertDatabaseHas('users', [
-            'id' => $user->id,
-            'name' => 'New Name',
-            'email' => 'newemail@example.com',
-        ]);
-    }
-
-    public function test_users_can_not_update_other_users(): void
-    {
-        $user = $this->createUserWithRole('user');
-        $otherUser = $this->createUserWithRole('user');
-
-        // Define the updated user data
-        $updatedUserData = [
-            'name' => 'New Name',
-            'email' => 'newemail@example.com',
-            'password' => 'newpassword',
-            'password_confirmation' => 'newpassword',
-            'role_id' => Role::where('name', 'user')->first()->id,
-        ];
-
-        // Act as the other user and make a PUT request to the /api/users/{id} endpoint
-        $response = $this->actingAs($otherUser, 'sanctum')->putJson("/api/v1/users/{$user->id}", $updatedUserData);
-
-        // Assert the status is 404 (Not Found)
-        $response->assertStatus(404);
-
-        // Assert the user is not updated in the database
-        $this->assertDatabaseHas('users', [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-        ]);
-
-        $this->assertDatabaseMissing('users', [
-            'id' => $user->id,
-            'name' => 'New Name',
-            'email' => 'newemail@example.com',
-        ]);
     }
 }

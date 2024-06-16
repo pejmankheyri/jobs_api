@@ -150,7 +150,10 @@ class User extends Authenticatable
         parent::boot();
 
         static::deleting(function (User $user) {
-            $user->company->each->delete();
+
+            if ($user->company && $user->company->count() > 0) {
+                $user->company->each->delete();
+            }
         });
     }
 }
