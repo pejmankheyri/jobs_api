@@ -73,7 +73,7 @@ class User extends Authenticatable
         return $query->orderBy('id', 'desc')->paginate(10);
     }
 
-    public function scopeAppledJobs(Builder $query, $request)
+    public function scopeAppliedJobs(Builder $query, $request)
     {
         $user = Auth::user();
 
@@ -100,7 +100,7 @@ class User extends Authenticatable
         return $output;
     }
 
-    public function scopeCompanies(Builder $query, $request)
+    public function scopeCompaniesList(Builder $query, $request)
     {
         $user = Auth::user();
 
