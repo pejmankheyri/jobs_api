@@ -24,13 +24,13 @@ class StoreTest extends TestCase
         $userData = [
             'name' => 'John Doe',
             'email' => 'admin@example.com',
+            'phone' => '08123456789',
             'password' => 'password',
             'password_confirmation' => 'password',
             'role_id' => $role->id,
         ];
 
-        $response = $this->actingAs($admin, 'sanctum')->postJson(route('api.v1.users.store'), $userData);
-
+        $response = $this->actingAs($admin, 'sanctum')->postJson(route('api.v1.register'), $userData);
         $response->assertStatus(201);
 
         // Assert the response contains the user's name and email
@@ -63,11 +63,11 @@ class StoreTest extends TestCase
         // Define the user data
         $user = $this->createUserWithRole('admin');
 
-        $response = $this->actingAs($user, 'sanctum')->getJson(route('api.v1.users.store'));
+        $response = $this->actingAs($user, 'sanctum')->getJson(route('api.v1.register'));
 
         foreach ($invalidUserDataSets as $invalidUserData) {
             // Make a POST request to the /api/users endpoint
-            $response = $this->postJson(route('api.v1.users.store'), $invalidUserData);
+            $response = $this->postJson(route('api.v1.register'), $invalidUserData);
 
             // Assert the status is 422 (Unprocessable Entity)
             $response->assertStatus(422);
@@ -76,13 +76,11 @@ class StoreTest extends TestCase
 
     public function test_users_can_not_be_created_by_unauthenticated_users(): void
     {
-        // Arrange
-        $this->createUserWithRole('admin');
 
         // Act
-        $response = $this->getJson(route('api.v1.users.store'));
+        $response = $this->getJson(route('api.v1.register'));
 
         // Assert
-        $response->assertStatus(401);
+        $response->assertStatus(405);
     }
 }

@@ -101,7 +101,7 @@ class UserController extends Controller
         $user = Auth::user();
         Gate::authorize('jobs', $user);
 
-        $jobs = User::appledJobs($request);
+        $jobs = User::appliedJobs($request);
 
         return JobItemResource::collection($jobs);
     }
@@ -111,7 +111,7 @@ class UserController extends Controller
         $user = Auth::user();
         Gate::authorize('companies', $user);
 
-        $companies = User::appledCompanies($request);
+        $companies = User::companiesList($request);
 
         return CompanyResource::collection($companies);
     }

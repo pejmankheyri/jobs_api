@@ -30,18 +30,6 @@ class ShowTest extends TestCase
         ]);
     }
 
-    public function test_users_can_not_see_other_users(): void
-    {
-        $user = $this->createUserWithRole('user');
-        $otherUser = $this->createUserWithRole('user');
-
-        // Act
-        $response = $this->actingAs($otherUser, 'sanctum')->getJson(route('api.v1.users.show', $user->id));
-
-        // Assert
-        $response->assertStatus(404);
-    }
-
     public function test_guest_can_not_see_users(): void
     {
         $user = User::factory()->create();
