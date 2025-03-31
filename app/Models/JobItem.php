@@ -69,7 +69,7 @@ class JobItem extends Model
         }
 
         // Order by ID in descending order and paginate
-        return $query->orderBy('id', 'desc')->paginate(10);
+        return $query->orderBy('id', 'desc')->paginate($request->per_page ?? 10);
     }
 
     public function scopeSearchJobs(Builder $query, $request)
