@@ -12,7 +12,7 @@ class UserTableSeeder extends Seeder
 {
     public $avatarSample = 'https://avatars.githubusercontent.com/u/3329008?v=4';
 
-    public $cvSample = 'https://www.sbs.ox.ac.uk/sites/default/files/2019-01/cv-template.pdf';
+    public $cvSample = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
 
     /**
      * Run the database seeds.

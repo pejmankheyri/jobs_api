@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CompanyTableSeeder extends Seeder
 {
@@ -19,21 +20,21 @@ class CompanyTableSeeder extends Seeder
         'https://images.pexels.com/photos/3184357/pexels-photo-3184357.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     ];
 
-    public $logos = [
-        'https://www.zarla.com/images/apple-logo-2400x2400-20220512-1.png',
-        'https://www.zarla.com/images/twitter-logo-2400x2400-20220512.png',
-        'https://www.zarla.com/images/facebook-logo-2400x2400-20220518-2.png',
-        'https://www.zarla.com/images/fedex-logo-2400x2400-20223105.png',
-        'https://www.zarla.com/images/coca-cola-logo-2400x2400-20220513.png',
-        'https://www.zarla.com/images/mcdonalds-logo-2400x2400-20220513-1.png',
+    public $logosMap = [
+        'Apple' => 'https://www.zarla.com/images/apple-logo-2400x2400-20220512-1.png',
+        'Twitter' => 'https://www.zarla.com/images/twitter-logo-2400x2400-20220512.png',
+        'Facebook' => 'https://www.zarla.com/images/facebook-logo-2400x2400-20220518-2.png',
+        'Fedex' => 'https://www.zarla.com/images/fedex-logo-2400x2400-20223105.png',
     ];
+
+    public $defaultLogo = 'https://www.zarla.com/images/default-company-logo.png';
 
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $companyCount = (int) $this->command->ask(__('message.how_many_companies'), 50);
+        $companyCount = (int) $this->command->ask(__('message.how_many_companies'), 5);
         $users = User::all();
 
         Storage::disk('public')->deleteDirectory('logos');
@@ -43,7 +44,8 @@ class CompanyTableSeeder extends Seeder
             $company->user_id = $users->random()->id;
             $company->save();
 
-            $logoPath = $this->generateRandomFile('logos', 'jpg', $this->logos[array_rand($this->logos)]);
+            $logoUrl = $this->getLogoForCompany($company->title);
+            $logoPath = $this->generateRandomFile('logos', 'jpg', $logoUrl);
 
             $company->update([
                 'logo' => $logoPath,
@@ -56,6 +58,24 @@ class CompanyTableSeeder extends Seeder
             }
 
         });
+    }
+
+    private function getLogoForCompany($title)
+    {
+        // Exact match
+        if (isset($this->logosMap[$title])) {
+            return $this->logosMap[$title];
+        }
+
+        // Check if title contains any of the logo keys
+        foreach ($this->logosMap as $companyName => $logoUrl) {
+            if (Str::contains(strtolower($title), strtolower($companyName))) {
+                return $logoUrl;
+            }
+        }
+
+        // If no match found, return a random logo
+        return array_values($this->logosMap)[array_rand(array_values($this->logosMap))];
     }
 
     private function generateRandomFile($folder, $extension, $url)
