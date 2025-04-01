@@ -14,9 +14,14 @@ class JobTagController extends Controller
         $tag = Tag::findOrFail($tagId);
 
         $perPage = $request->per_page ?? 15;
-        $jobs = $tag->jobItem()->with(['tags', 'company'])
-            ->orderBy('id', 'desc')
-            ->paginate($perPage);
+        $jobs = $tag->jobItem()->with([
+            'tags',
+            'company',
+            'company.location',
+            'company.tags',
+            'company.user',
+            'company.images',
+        ])->orderBy('id', 'desc')->paginate($perPage);
 
         return JobItemResource::collection($jobs);
     }

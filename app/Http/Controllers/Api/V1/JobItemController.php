@@ -23,12 +23,17 @@ class JobItemController extends Controller
      */
     public function index(Request $request)
     {
+        $perPage = $request->per_page ?? 10;
+        $page = $request->page ?? 1;
+
         if ($request->q) {
             $jobs = JobItem::getQueryWithRelations($request);
         } else {
-            $jobs = Cache::tags(['jobs'])->remember('jobsList', 60, function () use ($request) {
-                return JobItem::getQueryWithRelations($request);
-            });
+        $cacheKey = "jobsList-page-{$page}-perPage-{$perPage}";
+
+        $jobs = Cache::tags(['jobs'])->remember($cacheKey, 60, function () use ($request) {
+            return JobItem::getQueryWithRelations($request);
+        });
         }
 
         return JobItemResource::collection($jobs);
