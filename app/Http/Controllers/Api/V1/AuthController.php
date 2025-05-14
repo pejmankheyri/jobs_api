@@ -34,6 +34,8 @@ class AuthController extends Controller
 
         $token = $user->createToken('authToken')->plainTextToken;
 
+        $user->load(['roles', 'savedJobs.company', 'savedJobs.tags']);
+
         return response()->json(['token' => $token, 'user' => new UserResource($user)], 200);
     }
 

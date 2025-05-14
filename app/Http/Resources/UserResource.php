@@ -24,6 +24,8 @@ class UserResource extends JsonResource
             'cv' => Storage::url($this->cv),
             'role' => $this->roles->first()->name,
             'companies' => CompanyResource::collection($this->whenLoaded('company')),
+            'saved_jobs' => JobItemResource::collection($this->whenLoaded('savedJobs')),
+
         ];
     }
 }

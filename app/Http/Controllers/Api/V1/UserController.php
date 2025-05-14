@@ -49,7 +49,7 @@ class UserController extends Controller
                 return new UserResource($user->load(['companies']));
                 break;
             case 'user':
-                return new UserResource($user);
+            return new UserResource($user->load(['savedJobs.company', 'savedJobs.tags']));
                 break;
             default:
                 return response()->json([
