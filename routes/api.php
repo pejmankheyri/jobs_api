@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\CompanyImagesController;
 use App\Http\Controllers\Api\V1\CompanyTagController;
 use App\Http\Controllers\Api\V1\JobItemController;
 use App\Http\Controllers\Api\V1\JobTagController;
+use App\Http\Controllers\Api\V1\SavedJobController;
 use App\Http\Controllers\Api\V1\SearchController;
 use App\Http\Controllers\Api\V1\UserAvatarController;
 use App\Http\Controllers\Api\V1\UserController;
@@ -36,12 +37,16 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     // JOBS
     Route::prefix('jobs')->name('jobs.')->group(function () {
         Route::get('/', [JobItemController::class, 'index'])->name('index');
+        Route::get('/saved-jobs', [SavedJobController::class, 'index'])->middleware('auth:sanctum')->name('saved');
+
         Route::get('/{id}', [JobItemController::class, 'show'])->name('show');
         Route::post('/', [JobItemController::class, 'store'])->name('store')->middleware('auth:sanctum');
         Route::put('/{id}', [JobItemController::class, 'update'])->name('update')->middleware('auth:sanctum');
         Route::delete('/{id}', [JobItemController::class, 'destroy'])->name('destroy')->middleware('auth:sanctum');
         Route::post('/{id}/apply', [JobItemController::class, 'apply'])->name('apply')->middleware('auth:sanctum');
         Route::get('/{id}/applicants', [JobItemController::class, 'applicants'])->name('applicants')->middleware('auth:sanctum');
+        Route::post('/{job}/save', [SavedJobController::class, 'store'])->middleware('auth:sanctum');
+        Route::delete('/{job}/unsave', [SavedJobController::class, 'destroy'])->middleware('auth:sanctum');
     });
 
     // COMPANIES
